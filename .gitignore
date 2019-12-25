@@ -1,11 +1,10 @@
 # Built application files
-build/
+*.apk
+*.ap_
+*.aab
 
-# Files for the ART/Dalvik VM
-*.dex
-
-# External native build folder generated in Android Studio 2.2 and later
-.externalNativeBuild
+# Local configuration file (sdk path, etc)
+local.properties
 
 # Gradle files
 .gradle/
