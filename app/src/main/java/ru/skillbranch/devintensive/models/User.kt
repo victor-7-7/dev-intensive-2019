@@ -10,11 +10,9 @@ data class User (
     var avatar:String?,
     var rating:Int = 0,
     var respect:Int = 0,
-    val lastVisit:Date? = null,
+    val lastVisit:Date? = Date(),
     val isOnline:Boolean = false
     ) {
-
-    var introBit:String
 
     constructor(id:String, firstName:String?, lastName:String?)
             : this(id = id, firstName = firstName,
@@ -22,30 +20,16 @@ data class User (
 
     constructor(id:String): this(id, "John", "Doe")
 
-    init {
-        introBit = getIntro()
-//        println("\nIt's Alive!!!\n${if (lastName === "Doe")
-//                                "His name id $firstName $lastName"
-//                                else "And his name is $firstName $lastName!!!"}\n" +
-//                                introBit
-//        )
-    }
-
-    private fun getIntro() = """
-        la la la!!!
-        topola^^^        
-        It's Ok!""".trimIndent()
-
     fun printMe() = println("""
-            id: $id
-            firstName: $firstName
-            lastName: $lastName
-            avatar: $avatar
-            rating: $rating
-            respect: $respect
-            lastVisit: $lastVisit
-            isOnline: $isOnline            
-        """.trimIndent())
+        id: $id
+        firstName: $firstName
+        lastName: $lastName
+        avatar: $avatar
+        rating: $rating
+        respect: $respect
+        lastVisit: $lastVisit
+        isOnline: $isOnline            
+    """.trimIndent())
 
     companion object Factory {
         private var lastId:Int = -1
