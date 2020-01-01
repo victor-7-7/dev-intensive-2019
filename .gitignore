@@ -34,3 +34,6 @@ app/src/androidTest/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+#temp file
+notes.txt
