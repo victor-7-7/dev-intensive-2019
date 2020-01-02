@@ -10,10 +10,30 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider: String = " "): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented")
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var initials = ""
+        if (!firstName.isNullOrBlank() && firstName.trim()[0].isLetter())
+            initials = firstName.trim()[0].toUpperCase().toString()
+        if (!lastName.isNullOrBlank() && lastName.trim()[0].isLetter())
+            initials += lastName.trim()[0].toUpperCase().toString()
+        if (initials == "") return "null" else return initials
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
