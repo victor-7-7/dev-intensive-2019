@@ -69,20 +69,27 @@ val secondSet = listOf(-4,-3,-2,2,3,4)
 private fun flexTime(num:Int, unit:TimeUnits = TimeUnits.MINUTE): String {
     return when {
         // Число либо в 11..14, либо оканчивается не на {1,2,3,4}
+        (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.SECOND -> "секунд"
         (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.MINUTE -> "минут"
         (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.HOUR -> "часов"
         (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.DAY -> "дней"
         // Число оканчивается на {2,3,4} и не из 11..14
+        num % 10 in secondSet && unit == TimeUnits.SECOND -> "секунды"
         num % 10 in secondSet && unit == TimeUnits.MINUTE -> "минуты"
         num % 10 in secondSet && unit == TimeUnits.HOUR -> "часа"
         num % 10 in secondSet && unit == TimeUnits.DAY -> "дня"
         // Число оканчивается на 1 и не 11
+        unit == TimeUnits.SECOND -> "секунду"
         unit == TimeUnits.MINUTE -> "минуту"
         unit == TimeUnits.HOUR -> "час"
         unit == TimeUnits.DAY -> "день"
         // Недостижимый else, но компилятор требует
         else -> "intervals"
     }
+}
+
+fun TimeUnits.plural(num: Int): String {
+    return "$num ${ flexTime(num, this)}"
 }
 
 enum class TimeUnits {SECOND, MINUTE, HOUR, DAY}
