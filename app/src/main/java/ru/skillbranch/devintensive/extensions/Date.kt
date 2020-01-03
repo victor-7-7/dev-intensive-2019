@@ -94,8 +94,9 @@ private fun flexTime(num:Int, unit:TimeUnits = TimeUnits.MINUTE): String {
     }
 }
 
-fun TimeUnits.plural(num: Int): String {
-    return "${abs(num)} ${ flexTime(num, this)}"
-}
+//fun TimeUnits.plural(num: Int) = "${abs(num)} ${ flexTime(num, this)}"
 
-enum class TimeUnits {SECOND, MINUTE, HOUR, DAY}
+enum class TimeUnits {
+    SECOND, MINUTE, HOUR, DAY;
+    fun plural(num: Int) = "${abs(num)} ${ flexTime(num, this)}"
+}
