@@ -55,6 +55,7 @@ fun Date.humanizeDiff(date: Date = Date()): String {
                                     flexTime(d.toInt(), TimeUnits.DAY)
         else -> if (diff < 0) "более года назад" else "более чем через год"
     }
+    //TODO: Добавить интервал в месяцах?
 }
 
 val firstSet = listOf(-9,-8,-7,-6,-5,0,5,6,7,8,9)
