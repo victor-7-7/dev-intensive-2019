@@ -80,10 +80,10 @@ private fun flexTime(num:Int, unit:TimeUnits = TimeUnits.MINUTE): String {
         (abs(num) in 11..14 || abs(num) % 10 in firstSet)
                                     && unit == TimeUnits.DAY -> "дней"
         // Число оканчивается на {2,3,4} и не из 11..14
-        num % 10 in secondSet && unit == TimeUnits.SECOND -> "секунды"
-        num % 10 in secondSet && unit == TimeUnits.MINUTE -> "минуты"
-        num % 10 in secondSet && unit == TimeUnits.HOUR -> "часа"
-        num % 10 in secondSet && unit == TimeUnits.DAY -> "дня"
+        abs(num) % 10 in secondSet && unit == TimeUnits.SECOND -> "секунды"
+        abs(num) % 10 in secondSet && unit == TimeUnits.MINUTE -> "минуты"
+        abs(num) % 10 in secondSet && unit == TimeUnits.HOUR -> "часа"
+        abs(num) % 10 in secondSet && unit == TimeUnits.DAY -> "дня"
         // Число оканчивается на 1 и не 11
         unit == TimeUnits.SECOND -> "секунду"
         unit == TimeUnits.MINUTE -> "минуту"
