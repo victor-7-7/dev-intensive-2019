@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
@@ -55,10 +56,11 @@ fun Date.humanizeDiff(date: Date = Date()): String {
                                     flexTime(d.toInt(), TimeUnits.DAY)
         else -> if (diff < 0) "более года назад" else "более чем через год"
     }
+    //TODO: Добавить интервал в месяцах?
 }
 
-val firstSet = listOf(-9,-8,-7,-6,-5,0,5,6,7,8,9)
-val secondSet = listOf(-4,-3,-2,2,3,4)
+val firstSet = listOf(0,5,6,7,8,9)
+val secondSet = listOf(2,3,4)
 /**
 * {1,21,31,41...} - минуту час день
 * {2,22,32,42...
@@ -68,11 +70,15 @@ val secondSet = listOf(-4,-3,-2,2,3,4)
 */
 private fun flexTime(num:Int, unit:TimeUnits = TimeUnits.MINUTE): String {
     return when {
-        // Число либо в 11..14, либо оканчивается не на {1,2,3,4}
-        (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.SECOND -> "секунд"
-        (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.MINUTE -> "минут"
-        (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.HOUR -> "часов"
-        (num in 11..14 || num % 10 in firstSet) && unit == TimeUnits.DAY -> "дней"
+        // Число либо в 11..14 / -14..-11, либо оканчивается не на {1,2,3,4}
+        (abs(num) in 11..14 || abs(num) % 10 in firstSet)
+                                    && unit == TimeUnits.SECOND -> "секунд"
+        (abs(num) in 11..14 || abs(num) % 10 in firstSet)
+                                    && unit == TimeUnits.MINUTE -> "минут"
+        (abs(num) in 11..14 || abs(num) % 10 in firstSet)
+                                    && unit == TimeUnits.HOUR -> "часов"
+        (abs(num) in 11..14 || abs(num) % 10 in firstSet)
+                                    && unit == TimeUnits.DAY -> "дней"
         // Число оканчивается на {2,3,4} и не из 11..14
         num % 10 in secondSet && unit == TimeUnits.SECOND -> "секунды"
         num % 10 in secondSet && unit == TimeUnits.MINUTE -> "минуты"
@@ -89,7 +95,7 @@ private fun flexTime(num:Int, unit:TimeUnits = TimeUnits.MINUTE): String {
 }
 
 fun TimeUnits.plural(num: Int): String {
-    return "$num ${ flexTime(num, this)}"
+    return "${abs(num)} ${ flexTime(num, this)}"
 }
 
 enum class TimeUnits {SECOND, MINUTE, HOUR, DAY}
