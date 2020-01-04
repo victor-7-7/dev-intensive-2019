@@ -33,7 +33,7 @@ object Utils {
                 else -> outStr += ch
             }
         }
-        return outStr
+        return outStr.replace(Regex("$divider{2,}"), divider)
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {

@@ -20,4 +20,4 @@ fun String.removeHtmlSpecialChars(): String =
             this.replace(Regex("&#?\\w{2,6};"), "")
 
 fun String.removeExtraSpaces(): String =
-            this.trim().replace(Regex("\\s{2,}"), " ")
+            this.trim().replace(Regex(" {2,}"), " ")
