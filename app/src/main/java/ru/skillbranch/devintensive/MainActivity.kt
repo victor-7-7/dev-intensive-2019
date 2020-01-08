@@ -4,22 +4,25 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.skillbranch.devintensive.extensions.hideKeyboard
+import ru.skillbranch.devintensive.extensions.isKeyboardOpen
 import ru.skillbranch.devintensive.models.Bender
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 //    var benderImage: ImageView? = null
-    lateinit var benderImage: ImageView
-    lateinit var textTxt: TextView
-    lateinit var messageEt: EditText
-    lateinit var sendBtn: ImageView
-    lateinit var benderObj: Bender
+    private lateinit var benderImage: ImageView
+    private lateinit var textTxt: TextView
+    private lateinit var messageEt: EditText
+    private lateinit var sendBtn: ImageView
+    private lateinit var benderObj: Bender
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +49,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //        textTxt.setText(benderObj.askQuestion())
         textTxt.text = benderObj.askQuestion()
         sendBtn.setOnClickListener(this)
+        btn_test_keyboard.setOnClickListener(this)
+        messageEt.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when(actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    sendMessage(messageEt.text.toString())
+                    true
+                } else -> false
+            }
+        }
     }
 
     override fun onRestart() {
@@ -87,14 +99,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if (v?.id == R.id.iv_send) {
-            val (phrase, color) = benderObj
-                        .listenAnswer(messageEt.text.toString().toLowerCase())
-            messageEt.setText("")
-            val (r, g, b) = color
-            benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
-            textTxt.text = phrase
+        when (v?.id) {
+            R.id.iv_send -> sendMessage(messageEt.text.toString())
+            R.id.btn_test_keyboard -> Toast.makeText(
+                this, "Keyboard is open -> " +
+                        "${isKeyboardOpen()}", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun sendMessage(msg: String) {
+        if (msg.isEmpty()) return
+        val (phrase, color) = benderObj.listenAnswer(msg)
+        messageEt.setText("")
+        val (r, g, b) = color
+        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+        textTxt.text = phrase
+        hideKeyboard(messageEt)
     }
 
 }
