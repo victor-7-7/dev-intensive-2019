@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var messageEt: EditText
     private lateinit var sendBtn: ImageView
     private lateinit var benderObj: Bender
+    private var freshIdle: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                                     ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION")
                                     ?: Bender.Question.NAME.name
+        freshIdle = savedInstanceState?.getBoolean("FRESH_IDLE") ?: true
 
         benderObj = Bender(Bender.Status.valueOf(status),
                             Bender.Question.valueOf(question))
@@ -95,6 +97,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onSaveInstanceState(outState)
         outState.putString("STATUS", benderObj.status.name)
         outState.putString("QUESTION", benderObj.question.name)
+        outState.putBoolean("FRESH_IDLE", freshIdle)
         Log.d("M_MainActivity", "onSaveInstanceState " +
                             "${benderObj.status.name} ${benderObj.question.name}")
     }
@@ -112,7 +115,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         hideKeyboard(getRootView())
         if (msg.trim().isEmpty()) return
         if (benderObj.question == Bender.Question.IDLE) {
-            textTxt.text = Bender.Question.IDLE.question
+            if (freshIdle){
+                freshIdle = false
+                // Убираем фразу "Отлично - ты справился"
+                textTxt.text = Bender.Question.IDLE.question
+            }
             return
         }
         val (phrase, color) = benderObj.listenAnswer(msg.trim())

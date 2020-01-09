@@ -12,20 +12,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        val warning = when(question) {
-            Question.NAME -> if (answer[0].isLowerCase())
-                "Имя должно начинаться с заглавной буквы" else ""
-            Question.PROFESSION -> if (answer[0].isUpperCase())
-                "Профессия должна начинаться со строчной буквы" else ""
-            Question.MATERIAL -> if (answer.contains(Regex("\\d")))
-                "Материал не должен содержать цифр" else ""
-            Question.BDAY -> if (answer.contains(Regex("\\D")))
-                "Год моего рождения должен содержать только цифры" else ""
-            Question.SERIAL -> if (answer.length != 7 ||
-                                answer.contains(Regex("\\D")))
-                "Серийный номер содержит только цифры, и их 7" else ""
-            Question.IDLE -> ""
-        }
+        val warning = question.checkConditions(answer)
+
         return when {
             warning.isNotEmpty() -> "$warning\n${question.question}" to status.color
             question.answers.contains(answer) -> {
@@ -62,22 +50,40 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     enum class Question(val question: String, val answers: List<String>){
         NAME("Как меня зовут?", listOf("Бендер", "Bender")) {
             override fun nextQuestion(): Question = PROFESSION
+            override fun checkConditions(answer: String) =
+                if (answer[0].isLowerCase())
+                    "Имя должно начинаться с заглавной буквы" else ""
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion(): Question = MATERIAL
+            override fun checkConditions(answer: String) =
+                if (answer[0].isUpperCase())
+                    "Профессия должна начинаться со строчной буквы" else ""
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion(): Question = BDAY
+            override fun checkConditions(answer: String) =
+                if (answer.contains(Regex("\\d")))
+                    "Материал не должен содержать цифр" else ""
         },
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion(): Question = SERIAL
+            override fun checkConditions(answer: String) =
+                if (answer.contains(Regex("\\D")))
+                    "Год моего рождения должен содержать только цифры" else ""
         },
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion(): Question = IDLE
+            override fun checkConditions(answer: String) =
+                if (answer.length != 7 ||
+                    answer.contains(Regex("\\D")))
+                    "Серийный номер содержит только цифры, и их 7" else ""
         },
         IDLE("На этом все, вопросов больше нет", listOf()) {
             override fun nextQuestion(): Question = IDLE
+            override fun checkConditions(answer: String) = ""
         };
         abstract fun nextQuestion(): Question
+        abstract fun checkConditions(answer: String): String
     }
 }
