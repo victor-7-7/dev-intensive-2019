@@ -110,8 +110,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sendMessage(msg: String) {
         hideKeyboard(getRootView())
-        if (msg.trim().isEmpty() ||
-            benderObj.question == Bender.Question.IDLE) return
+        if (msg.trim().isEmpty()) return
+        if (benderObj.question == Bender.Question.IDLE) {
+            textTxt.text = Bender.Question.IDLE.question
+            return
+        }
         val (phrase, color) = benderObj.listenAnswer(msg.trim())
         messageEt.setText("")
         val (r, g, b) = color
