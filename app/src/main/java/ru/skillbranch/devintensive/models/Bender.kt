@@ -11,20 +11,36 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         Question.IDLE -> Question.IDLE.question
     }
 
-
-
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        return if (question.answers.contains(answer)){
-            question = question.nextQuestion()
-            "Отлично - ты справился\n${question.question}" to status.color
-        }else{
-            var ans = "Это неправильный ответ"
-            status = status.nextStatus()
-            if (status == Status.NORMAL) {
-                ans += ". Давай все по новой"
-                question = Question.NAME
+        val warning = when(question) {
+            Question.NAME -> if (answer[0].isLowerCase())
+                "Имя должно начинаться с заглавной буквы" else ""
+            Question.PROFESSION -> if (answer[0].isUpperCase())
+                "Профессия должна начинаться со строчной буквы" else ""
+            Question.MATERIAL -> if (answer.contains(Regex("\\d")))
+                "Материал не должен содержать цифр" else ""
+            Question.BDAY -> if (answer.contains(Regex("\\D")))
+                "Год моего рождения должен содержать только цифры" else ""
+            Question.SERIAL -> if (answer.length != 7 ||
+                                answer.contains(Regex("\\D")))
+                "Серийный номер содержит только цифры, и их 7" else ""
+            Question.IDLE -> ""
+        }
+        return when {
+            warning.isNotEmpty() -> "$warning\n${question.question}" to status.color
+            question.answers.contains(answer) -> {
+                question = question.nextQuestion()
+                "Отлично - ты справился\n${question.question}" to status.color
             }
-            "$ans\n${question.question}" to status.color
+            else -> {
+                var ans = "Это неправильный ответ"
+                status = status.nextStatus()
+                if (status == Status.NORMAL) {
+                    ans += ". Давай все по новой"
+                    question = Question.NAME
+                }
+                "$ans\n${question.question}" to status.color
+            }
         }
     }
 
@@ -44,7 +60,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     enum class Question(val question: String, val answers: List<String>){
-        NAME("Как меня зовут?", listOf("Бендер", "bender")) {
+        NAME("Как меня зовут?", listOf("Бендер", "Bender")) {
             override fun nextQuestion(): Question = PROFESSION
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
@@ -60,7 +76,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             override fun nextQuestion(): Question = IDLE
         },
         IDLE("На этом все, вопросов больше нет", listOf()) {
-            override fun nextQuestion(): Question = NAME
+            override fun nextQuestion(): Question = IDLE
         };
         abstract fun nextQuestion(): Question
     }

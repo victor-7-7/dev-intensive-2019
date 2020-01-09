@@ -108,13 +108,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun sendMessage(msg: String) {
-        if (msg.isEmpty()) return
-        val (phrase, color) = benderObj.listenAnswer(msg)
+        hideKeyboard(messageEt)
+        if (msg.trim().isEmpty() ||
+            benderObj.question == Bender.Question.IDLE) return
+        val (phrase, color) = benderObj.listenAnswer(msg.trim())
         messageEt.setText("")
         val (r, g, b) = color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
         textTxt.text = phrase
-        hideKeyboard(messageEt)
     }
 
 }
