@@ -14,7 +14,7 @@
         android:layout_height="100dp"
         android:gravity="center"
         android:text="Hello World!"
-        android:textSize="@dimen/font_large_24" />
+        android:textSize="@dimen/font_medium_20" />
 
     <ImageView
         android:id="@+id/iv_bender"
