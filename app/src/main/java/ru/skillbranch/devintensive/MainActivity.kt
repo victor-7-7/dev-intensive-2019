@@ -114,12 +114,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun sendMessage(msg: String) {
         hideKeyboard(getRootView())
         if (msg.trim().isEmpty()) return
-        if (benderObj.question == Bender.Question.IDLE) {
-            if (freshIdle){
-                freshIdle = false
-                // Убираем фразу "Отлично - ты справился"
-                textTxt.text = Bender.Question.IDLE.question
-            }
+        if (benderObj.question == Bender.Question.IDLE && freshIdle){
+            freshIdle = false
+            // Убираем фразу "Отлично - ты справился"
+            textTxt.text = Bender.Question.IDLE.question
             return
         }
         val (phrase, color) = benderObj.listenAnswer(msg.trim())
