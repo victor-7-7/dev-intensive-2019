@@ -38,3 +38,5 @@ fun Activity.isKeyboardOpen(): Boolean {
     return overlayHeight > convertDpToPx(70F).roundToInt()
 }
 
+fun Activity.isKeyboardClosed() = !isKeyboardOpen()
+
