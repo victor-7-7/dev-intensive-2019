@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun sendMessage(msg: String) {
-        hideKeyboard(getRootView())
+        hideKeyboard()
         if (msg.trim().isEmpty()) return
         if (benderObj.question == Bender.Question.IDLE && freshIdle){
             freshIdle = false
