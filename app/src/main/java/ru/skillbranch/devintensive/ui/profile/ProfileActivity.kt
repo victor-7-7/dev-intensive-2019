@@ -23,46 +23,52 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: ProfileViewModel
-    lateinit var viewFields: Map<String, TextView>
-    var isEditMode = false
+    private lateinit var viewFields: Map<String, TextView>
+    private var isEditMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // TODO: Set custom Theme here before super and setContentView()
 
+        Log.d("M_ProfileActivity", "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
-        Log.d("M_ProfileActivity", "onCreate")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("M_ProfileActivity", "onSaveInstanceState()")
         super.onSaveInstanceState(outState)
         outState.putBoolean(IS_EDIT_MODE, isEditMode)
     }
 
     private fun initViewModel() {
+        Log.d("M_ProfileActivity", "initViewModel()")
         viewModel = ViewModelProviders.of(this)
                             .get(ProfileViewModel::class.java)
-        viewModel.getProfileData().observe(this, Observer { updateUI(it) })
-        viewModel.getTheme().observe(this, Observer { updateTheme(it) })
+        viewModel.getProfileData().observe(this, Observer {
+            Log.d("M_ProfileActivity", "Profile observer reacts")
+            updateUI(it) })
+        viewModel.getTheme().observe(this, Observer {
+            Log.d("M_ProfileActivity", "Theme observer reacts")
+            updateTheme(it) })
     }
 
     private fun updateTheme(mode: Int) {
-        Log.d("M_ProfileActivity", "updateTheme")
+        Log.d("M_ProfileActivity", "updateTheme()")
         // TODO: bad code which recreate activity
         delegate.localNightMode = mode
     }
 
     private fun updateUI(profile: Profile) {
+        Log.d("M_ProfileActivity", "updateUI()")
         profile.toMap().also {
-            for ((k,v) in viewFields) {
-                v.text = it[k].toString()
-            }
+            for ((k,v) in viewFields) v.text = it[k].toString()
         }
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
+        Log.d("M_ProfileActivity", "initViews()")
         viewFields = mapOf(
             "nickName" to tv_nick_name,
             "rank" to tv_rank,
@@ -78,17 +84,20 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
+            Log.d("M_ProfileActivity", "click btn_edit")
             if (isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
         }
 
         btn_switch_theme.setOnClickListener {
+            Log.d("M_ProfileActivity", "click btn_switch_theme")
             viewModel.switchTheme()
         }
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
+        Log.d("M_ProfileActivity", "showCurrentMode()")
         val info = viewFields.filter {
             setOf("firstName", "lastName", "about", "repository").contains(it.key) }
         for ((_, v) in info) {
@@ -120,6 +129,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun saveProfileInfo() {
+        Log.d("M_ProfileActivity", "saveProfileInfo()")
         Profile(
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
