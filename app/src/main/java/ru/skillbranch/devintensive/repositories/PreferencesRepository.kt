@@ -7,7 +7,6 @@ import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.models.Profile
 
 object PreferencesRepository {
-
     private const val FIRST_NAME = "FIRST_NAME"
     private const val LAST_NAME = "LAST_NAME"
     private const val ABOUT = "ABOUT"

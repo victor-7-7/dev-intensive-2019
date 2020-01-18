@@ -26,6 +26,7 @@ object Utils {
 
     fun transliteration(payload: String, divider: String = " "): String {
         var outStr = ""
+        if (payload.trim().isEmpty()) return outStr
         for (ch in payload.trim().toCharArray()) {
             when {
                 trans.containsKey(ch) -> outStr += trans[ch]
@@ -33,6 +34,7 @@ object Utils {
                 else -> outStr += ch
             }
         }
+        // Несколько идущих подряд разделителей заменяем на один разделитель
         return outStr.replace(Regex("$divider{2,}"), divider)
     }
 

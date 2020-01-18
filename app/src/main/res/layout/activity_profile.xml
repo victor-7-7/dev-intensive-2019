@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/profile_bg"
-            android:scaleType="centerCrop"
-            app:aspectRatio="1.78"/>
+            android:scaleType="centerCrop"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,8 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_avatar"
-                android:layout_centerHorizontal="true"
-                android:text="John Doe"/>
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 style="@style/Profile.Header.Rank"
