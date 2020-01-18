@@ -15,4 +15,8 @@
         <item name="aspectRatio">1.7</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
 </resources>

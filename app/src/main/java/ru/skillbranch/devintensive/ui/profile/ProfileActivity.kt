@@ -27,9 +27,9 @@ class ProfileActivity : AppCompatActivity() {
     private var isEditMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // TODO: Set custom Theme here before super and setContentView()
-
         Log.d("M_ProfileActivity", "onCreate()")
+        // После заставки (splash screen) возвращаем для активити app-тему
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
