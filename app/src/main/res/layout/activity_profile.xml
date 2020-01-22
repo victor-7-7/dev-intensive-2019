@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/profile_bg"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            app:aspectRatio="1.7"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,23 +31,25 @@
                 android:layout_height="@dimen/btn_round_size_40"
                 android:layout_toStartOf="@id/iv_avatar"
                 android:layout_marginEnd="@dimen/spacing_huge_32"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="52dp"
                 android:background="@drawable/btn_round_bg"
                 android:src="@drawable/ic_switch_day_night"/>
 
-            <ImageView
+            <ru.skillbranch.devintensive.ui.custom.CircleImageView
                 android:id="@+id/iv_avatar"
                 android:layout_width="@dimen/avatar_round_size_112"
                 android:layout_height="@dimen/avatar_round_size_112"
+                android:layout_marginTop="@dimen/spacing_normal_16"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/avatar_default"/>
+                app:cv_borderColor="@android:color/holo_red_dark"
+                app:cv_borderWidth="8dp"/>
 
             <ImageButton
                 android:id="@+id/btn_edit"
                 android:layout_width="@dimen/btn_round_size_40"
                 android:layout_height="@dimen/btn_round_size_40"
                 android:layout_marginStart="@dimen/spacing_huge_32"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="52dp"
                 android:layout_toEndOf="@id/iv_avatar"
                 android:background="@drawable/btn_round_bg"
                 android:src="@drawable/ic_edit_black_24dp" />
@@ -57,7 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_avatar"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                tools:text="John_Doe"/>
 
             <TextView
                 style="@style/Profile.Header.Rank"
@@ -66,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_nick_name"
                 android:layout_centerHorizontal="true"
-                android:text="Junior Android Developer"/>
+                tools:text="Junior Android Developer"/>
 
         </RelativeLayout>
 
