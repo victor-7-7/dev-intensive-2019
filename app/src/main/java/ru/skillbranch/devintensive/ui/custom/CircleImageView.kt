@@ -8,7 +8,9 @@ import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.ImageView
+import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
+import androidx.core.content.ContextCompat
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertDpToPx
 import ru.skillbranch.devintensive.extensions.convertPxToDp
@@ -67,8 +69,10 @@ class CircleImageView @JvmOverloads constructor(
 
     fun getBorderColor():Int = borderColor
 
-    fun setBorderColor(hex: String) {
+    fun setBorderColor(hex: String) { borderColor = Color.parseColor(hex) }
 
+    fun setBorderColor(@ColorRes colorId: Int) {
+        borderColor = ContextCompat.getColor(context, colorId)
     }
 
     override fun onDraw(canvas: Canvas) {
