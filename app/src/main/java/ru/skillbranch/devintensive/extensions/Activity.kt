@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.extensions
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -21,7 +22,10 @@ fun Activity.hideKeyboard() {
 fun Activity.getRootView(): View = findViewById<View>(android.R.id.content)
 
 fun Context.convertDpToPx(dp: Float): Float = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
+                TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+
+fun Context.convertPxToDp(px: Float): Float = px / (resources.displayMetrics.xdpi
+                                                / DisplayMetrics.DENSITY_DEFAULT)
 
 fun Activity.isKeyboardOpen(): Boolean {
     val frame = Rect()

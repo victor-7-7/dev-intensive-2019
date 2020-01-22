@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.annotation.Dimension
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertDpToPx
+import ru.skillbranch.devintensive.extensions.convertPxToDp
 
 class CircleImageView @JvmOverloads constructor(
     context: Context,
@@ -40,7 +41,8 @@ class CircleImageView @JvmOverloads constructor(
             // Получаем значение в пикселях
             borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth,
                                                             borderWidth)
-            // TODO: borderWidthDp =
+            // Преобразуем пиксели в dp
+            borderWidthDp = context.convertPxToDp(borderWidth).toInt()
 
             a.recycle()
         }
