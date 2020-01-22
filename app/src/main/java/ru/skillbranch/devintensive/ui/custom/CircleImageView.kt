@@ -23,7 +23,6 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH_DP = 2F
     }
-//    private val dens = context.resources.displayMetrics.density
 
     private var borderColor = DEFAULT_BORDER_COLOR
     // Ширина границы в пикселах
@@ -64,6 +63,12 @@ class CircleImageView @JvmOverloads constructor(
         borderWidth = context.convertDpToPx(dp.toFloat())
         ringPaint.strokeWidth = borderWidth
         invalidate()
+    }
+
+    fun getBorderColor():Int = borderColor
+
+    fun setBorderColor(hex: String) {
+
     }
 
     override fun onDraw(canvas: Canvas) {
