@@ -42,7 +42,7 @@
                 android:layout_marginTop="@dimen/spacing_normal_16"
                 android:layout_centerHorizontal="true"
                 app:cv_borderColor="@android:color/holo_red_dark"
-                app:cv_borderWidth="8dp"/>
+                app:cv_borderWidth="6dp"/>
 
             <ImageButton
                 android:id="@+id/btn_edit"
