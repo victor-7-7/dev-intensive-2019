@@ -40,9 +40,8 @@
                 android:layout_width="@dimen/avatar_round_size_112"
                 android:layout_height="@dimen/avatar_round_size_112"
                 android:layout_marginTop="@dimen/spacing_normal_16"
-                android:layout_centerHorizontal="true"
-                app:cv_borderWidth="5dp"
-                android:src="@drawable/avatarka"/>
+                android:scaleType="fitCenter"
+                android:layout_centerHorizontal="true"/>
 
             <ImageButton
                 android:id="@+id/btn_edit"
@@ -255,7 +254,7 @@
                 android:inputType="textUri"
                 android:imeOptions="actionDone"/>
         </com.google.android.material.textfield.TextInputLayout>
-
+<!--        https://developer.android.com/reference/com/google/android/material/textfield/TextInputLayout-->
         <ImageView
             android:id="@+id/ic_eye"
             android:layout_width="24dp"

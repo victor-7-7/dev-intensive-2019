@@ -3,6 +3,7 @@ package ru.skillbranch.devintensive.ui.profile
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.custom.DefaultAvatar
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
@@ -66,8 +68,10 @@ class ProfileActivity : AppCompatActivity() {
         profile.toMap().also {
             for ((k,v) in viewFields) v.text = it[k].toString()
         }
-        iv_avatar.assignInitials(Utils.toInitials(
-                                profile.firstName, profile.lastName) ?: "")
+        // Цепляем дефолтную картинку для данного профиля
+        val drawable = DefaultAvatar(this).apply { assignInitials(
+            Utils.toInitials(profile.firstName, profile.lastName) ?: "") }
+        iv_avatar.setImageDrawable(drawable)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {

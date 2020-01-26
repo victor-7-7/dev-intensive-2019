@@ -3,7 +3,6 @@ package ru.skillbranch.devintensive.ui.custom
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
@@ -12,9 +11,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.convertDpToPx
-import ru.skillbranch.devintensive.extensions.convertPxToDp
-import ru.skillbranch.devintensive.extensions.convertSpToPx
+import ru.skillbranch.devintensive.extensions.*
 import kotlin.math.min
 
 class CircleImageView @JvmOverloads constructor(
@@ -37,10 +34,6 @@ class CircleImageView @JvmOverloads constructor(
     private var initials: String = ""
 
     private var ringPaint: Paint
-    private var textPaint: Paint
-//    private var avatarkaD: Drawable? = null
-//    private var avatarkaB: Bitmap
-//    private lateinit var scaledAva: Bitmap
 
     init {
         if (attrs != null) {
@@ -60,29 +53,9 @@ class CircleImageView @JvmOverloads constructor(
             strokeWidth = borderWidth
             style = Paint.Style.STROKE
         }
-        textPaint = TextPaint(ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            textSize = context.convertSpToPx(FONT_SIZE)
-            typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
-        }
-
-//        avatarkaD = ResourcesCompat.getDrawable(
-//                                resources, R.drawable.avatarka, null)
-//        avatarkaB = BitmapFactory.decodeResource(resources, R.drawable.avatarka)
 
         outlineProvider = Outliner()
         clipToOutline = true
-    }
-
-    fun assignInitials(initials: String) {
-        this.initials = initials
-        // Если в лейауте не назначена картинка через android:src=...
-        if (drawable == null) {
-            // Задаем дефолтный фон для картинки
-            setBackgroundColor(ContextCompat.getColor(context, R.color.color_accent))
-            // Отрисовываем
-            invalidate()
-        } else setBackgroundColor(Color.TRANSPARENT)
     }
 
     @Dimension
@@ -103,22 +76,8 @@ class CircleImageView @JvmOverloads constructor(
         borderColor = ContextCompat.getColor(context, colorId)
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        // Масштабируем картинку
-//        scaledAva = Bitmap.createScaledBitmap(avatarkaB, w, h, true)
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // Если в лейауте не назначена картинка через android:src=...
-        if (drawable == null) {
-            val baselineY = (height - textPaint.fontMetrics.top - textPaint.fontMetrics.bottom) * .5F
-            // Х-координата начала текста
-            val textX = (width - textPaint.measureText(initials)) * .5F
-            // Рисуем на уже заданном цветном фоне инициалы юзера
-            canvas.drawText(initials, textX, baselineY, textPaint)
-        }
         val delta = borderWidth * .5F
         // Радиус граничного кольца надо уменьшить, чтобы вписать его в круг
         canvas.drawArc(delta, delta, width - delta, height - delta,
@@ -132,7 +91,4 @@ class CircleImageView @JvmOverloads constructor(
             outline!!.setRoundRect(rect, radius.toFloat())
         }
     }
-
-
-
 }
