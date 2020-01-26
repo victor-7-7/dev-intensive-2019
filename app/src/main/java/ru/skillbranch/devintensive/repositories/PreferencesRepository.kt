@@ -36,7 +36,6 @@ object PreferencesRepository {
     fun getAppTheme(): Int = prefs.getInt(APP_THEME, AppCompatDelegate.MODE_NIGHT_NO)
 
 
-
     fun saveProfile(profile: Profile) =
         with(profile) {
             putValue(FIRST_NAME to firstName)

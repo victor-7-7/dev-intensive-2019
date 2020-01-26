@@ -3,16 +3,19 @@ package ru.skillbranch.devintensive.ui.custom
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.graphics.drawable.Drawable
+import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertDpToPx
 import ru.skillbranch.devintensive.extensions.convertPxToDp
+import ru.skillbranch.devintensive.extensions.convertSpToPx
+import kotlin.math.min
 
 class CircleImageView @JvmOverloads constructor(
     context: Context,
@@ -23,6 +26,7 @@ class CircleImageView @JvmOverloads constructor(
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH_DP = 2F
+        private const val FONT_SIZE = 42F
     }
 
     private var borderColor = DEFAULT_BORDER_COLOR
@@ -30,10 +34,13 @@ class CircleImageView @JvmOverloads constructor(
     private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
     private var borderWidthDp = DEFAULT_BORDER_WIDTH_DP.toInt()
 
+    private var initials: String = ""
+
     private var ringPaint: Paint
+    private var textPaint: Paint
 //    private var avatarkaD: Drawable? = null
-    private var avatarkaB: Bitmap
-    private lateinit var scaledAva: Bitmap
+//    private var avatarkaB: Bitmap
+//    private lateinit var scaledAva: Bitmap
 
     init {
         if (attrs != null) {
@@ -45,7 +52,6 @@ class CircleImageView @JvmOverloads constructor(
                                                             borderWidth)
             // Преобразуем пиксели в dp
             borderWidthDp = context.convertPxToDp(borderWidth).toInt()
-
             a.recycle()
         }
 
@@ -54,11 +60,31 @@ class CircleImageView @JvmOverloads constructor(
             strokeWidth = borderWidth
             style = Paint.Style.STROKE
         }
+        textPaint = TextPaint(ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            textSize = context.convertSpToPx(FONT_SIZE)
+            typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
+        }
+
 //        avatarkaD = ResourcesCompat.getDrawable(
 //                                resources, R.drawable.avatarka, null)
-        avatarkaB = BitmapFactory.decodeResource(resources, R.drawable.avatarka)
+//        avatarkaB = BitmapFactory.decodeResource(resources, R.drawable.avatarka)
 
+        outlineProvider = Outliner()
+        clipToOutline = true
     }
+
+    fun assignInitials(initials: String) {
+        this.initials = initials
+        // Если в лейауте не назначена картинка через android:src=...
+        if (drawable == null) {
+            // Задаем дефолтный фон для картинки
+            setBackgroundColor(ContextCompat.getColor(context, R.color.color_accent))
+            // Отрисовываем
+            invalidate()
+        } else setBackgroundColor(Color.TRANSPARENT)
+    }
+
     @Dimension
     fun getBorderWidth(): Int = borderWidthDp
 
@@ -77,34 +103,36 @@ class CircleImageView @JvmOverloads constructor(
         borderColor = ContextCompat.getColor(context, colorId)
     }
 
-// Custom Drawing - https://developer.android.com/training/custom-views/custom-drawing
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         // Масштабируем картинку
-        scaledAva = Bitmap.createScaledBitmap(avatarkaB, w, h, true)
+//        scaledAva = Bitmap.createScaledBitmap(avatarkaB, w, h, true)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val rectF = RectF(0F, 0F, width.toFloat(), height.toFloat())
-
-        if (avatarkaB != null) {
-            // Круглая область
-            val path = Path().apply { addOval(rectF, Path.Direction.CW) }
-            canvas.save()
-            // Ограничиваем отрисовку этой областью
-            canvas.clipPath(path)
-            // Рисуем картинку в круге
-            canvas.drawBitmap(scaledAva, 0f, 0f, null)
-            // Снимаем ограничение
-            canvas.restore()
-        } else {
-            // Рисуем шаблонную круглую заготовку
+        // Если в лейауте не назначена картинка через android:src=...
+        if (drawable == null) {
+            val baselineY = (height - textPaint.fontMetrics.top - textPaint.fontMetrics.bottom) * .5F
+            // Х-координата начала текста
+            val textX = (width - textPaint.measureText(initials)) * .5F
+            // Рисуем на уже заданном цветном фоне инициалы юзера
+            canvas.drawText(initials, textX, baselineY, textPaint)
         }
         val delta = borderWidth * .5F
         // Радиус граничного кольца надо уменьшить, чтобы вписать его в круг
-        rectF.inset(delta, delta)
-        canvas.drawArc(rectF, 0F, 360F, false, ringPaint)
+        canvas.drawArc(delta, delta, width - delta, height - delta,
+                            0F, 360F, false, ringPaint)
     }
+
+    class Outliner() : ViewOutlineProvider() {
+        override fun getOutline(view: View?, outline: Outline?) {
+            val rect = Rect(0, 0, view!!.width, view.height)
+            val radius = min(view.width, view.height)
+            outline!!.setRoundRect(rect, radius.toFloat())
+        }
+    }
+
+
+
 }

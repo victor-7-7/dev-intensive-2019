@@ -24,6 +24,9 @@ fun Activity.getRootView(): View = findViewById<View>(android.R.id.content)
 fun Context.convertDpToPx(dp: Float): Float = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
 
+fun Context.convertSpToPx(sp: Float): Float = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
+
 fun Context.convertPxToDp(px: Float): Float = px / (resources.displayMetrics.xdpi
                                                 / DisplayMetrics.DENSITY_DEFAULT)
 

@@ -41,8 +41,8 @@
                 android:layout_height="@dimen/avatar_round_size_112"
                 android:layout_marginTop="@dimen/spacing_normal_16"
                 android:layout_centerHorizontal="true"
-                app:cv_borderColor="@android:color/holo_red_dark"
-                app:cv_borderWidth="6dp"/>
+                app:cv_borderWidth="5dp"
+                android:src="@drawable/avatarka"/>
 
             <ImageButton
                 android:id="@+id/btn_edit"

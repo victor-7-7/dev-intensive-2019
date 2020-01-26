@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -57,7 +58,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateTheme(mode: Int) {
         Log.d("M_ProfileActivity", "updateTheme()")
         // TODO: bad code which recreate activity
-        delegate.setLocalNightMode(mode)
+        delegate.localNightMode = mode
     }
 
     private fun updateUI(profile: Profile) {
@@ -65,6 +66,8 @@ class ProfileActivity : AppCompatActivity() {
         profile.toMap().also {
             for ((k,v) in viewFields) v.text = it[k].toString()
         }
+        iv_avatar.assignInitials(Utils.toInitials(
+                                profile.firstName, profile.lastName) ?: "")
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -140,4 +143,5 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-}
+
+ }
