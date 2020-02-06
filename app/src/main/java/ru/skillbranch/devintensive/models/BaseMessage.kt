@@ -1,32 +1,18 @@
 package ru.skillbranch.devintensive.models
 
+import ru.skillbranch.devintensive.models.data.Chat
+import ru.skillbranch.devintensive.models.data.User
 import java.util.*
 
+/**
+ * Created by Makweb on 24.06.2019.
+ */
 abstract class BaseMessage(
     val id: String,
-    val from: User?,
+    val from: User,
     val chat: Chat,
-    val isIncoming: Boolean = false,
-    val date: Date = Date()
-) {
-    abstract fun formatMessage(): String
+    val isIncoming: Boolean = true,
+    val date: Date = Date(),
+    var isReaded: Boolean = false
 
-    companion object AbstractFactory {
-        private var lastId = -1
-        fun makeMessage(from: User?, chat: Chat, date: Date = Date(),
-                        type: String = "text", payload: Any?,
-                        isIncoming: Boolean = false): BaseMessage {
-            lastId++
-            return when(type) {
-                "text" -> TextMessage("$lastId", from, chat,  isIncoming, date,
-                                            text = payload as String)
-                "image" -> ImageMessage("$lastId", from, chat, isIncoming, date,
-                                            image = payload as String)
-                // Вариант для переставленных местами аргументов type и payload
-                else -> if (payload == "text" || payload == "image")
-                     makeMessage(from, chat, date, payload as String, type, isIncoming)
-                        else makeMessage(from, chat, date, payload = type)
-            }
-        }
-    }
-}
+)

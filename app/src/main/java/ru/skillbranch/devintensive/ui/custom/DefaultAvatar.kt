@@ -7,8 +7,10 @@ import android.text.TextPaint
 import androidx.core.content.ContextCompat
 import ru.skillbranch.devintensive.R
 
-class DefaultAvatar @JvmOverloads constructor (val context: Context,
-               var pic: Picture = Picture()) : PictureDrawable(pic) {
+class DefaultAvatar @JvmOverloads constructor (
+    val context: Context,
+    private var pic: Picture = Picture(null)
+) : PictureDrawable(pic) {
 
     companion object {
         private const val W = 200

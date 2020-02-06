@@ -70,7 +70,7 @@ class ProfileActivity : AppCompatActivity() {
         }
         // Цепляем дефолтную картинку для данного профиля
         val drawable = DefaultAvatar(this).apply { assignInitials(
-            Utils.toInitials(profile.firstName, profile.lastName) ?: "") }
+            Utils.toInitials(profile.firstName, profile.lastName) ?: "??") }
         iv_avatar.setImageDrawable(drawable)
     }
 

@@ -14,7 +14,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.*
 import kotlin.math.min
 
-class CircleImageView @JvmOverloads constructor(
+open class CircleImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -23,15 +23,12 @@ class CircleImageView @JvmOverloads constructor(
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH_DP = 2F
-        private const val FONT_SIZE = 42F
     }
 
     private var borderColor = DEFAULT_BORDER_COLOR
     // Ширина границы в пикселах
     private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
     private var borderWidthDp = DEFAULT_BORDER_WIDTH_DP.toInt()
-
-    private var initials: String = ""
 
     private var ringPaint: Paint
 
@@ -62,6 +59,7 @@ class CircleImageView @JvmOverloads constructor(
     fun getBorderWidth(): Int = borderWidthDp
 
     fun setBorderWidth(@Dimension dp: Int) {
+        if (dp < 0) return
         borderWidthDp = dp
         borderWidth = context.convertDpToPx(dp.toFloat())
         ringPaint.strokeWidth = borderWidth
@@ -70,16 +68,25 @@ class CircleImageView @JvmOverloads constructor(
 
     fun getBorderColor():Int = borderColor
 
-    fun setBorderColor(hex: String) { borderColor = Color.parseColor(hex) }
+    fun setBorderColor(hex: String) {
+        borderColor = Color.parseColor(hex)
+        ringPaint.color = borderColor
+        invalidate()
+    }
 
     fun setBorderColor(@ColorRes colorId: Int) {
         borderColor = ContextCompat.getColor(context, colorId)
+        ringPaint.color = borderColor
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (borderWidth == 0F) return
+        // Радиус граничного кольца надо уменьшить на половину
+        // толщины, чтобы вписать его в круг
         val delta = borderWidth * .5F
-        // Радиус граничного кольца надо уменьшить, чтобы вписать его в круг
+        // Рисуем кольцо
         canvas.drawArc(delta, delta, width - delta, height - delta,
                             0F, 360F, false, ringPaint)
     }

@@ -24,8 +24,9 @@ class App : Application() {
     override fun onCreate() {
         Log.d("M_App", "onCreate()")
         super.onCreate()
-        PreferencesRepository.getAppTheme().also {
-            AppCompatDelegate.setDefaultNightMode(it)
-        }
+//        PreferencesRepository.getAppTheme().also {
+//            AppCompatDelegate.setDefaultNightMode(it)
+//        }
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }
