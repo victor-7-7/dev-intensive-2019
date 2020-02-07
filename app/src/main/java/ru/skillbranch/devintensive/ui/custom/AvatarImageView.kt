@@ -21,15 +21,13 @@ class AvatarImageView @JvmOverloads constructor(
     }
 
     private var initials: String = ""
-    private var textPaint: Paint
-//    private var drawableSingle: Drawable? = null
+    private var textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
+    }
 
     init {
         setBorderWidth(0)
-        textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
-        }
     }
 
     fun assignInitials(initials: String?) {
