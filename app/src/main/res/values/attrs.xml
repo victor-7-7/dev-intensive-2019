@@ -12,12 +12,19 @@
     <declare-styleable name="AvatarImageView">
         <attr name="aiv_borderColor" format="color"/>
         <attr name="aiv_borderWidth" format="dimension"/>
+        <attr name="aiv_initials" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="AvatarImageViewMask">
         <attr name="aivm_borderColor" format="color"/>
         <attr name="aivm_borderWidth" format="dimension"/>
         <attr name="aivm_initials" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="AvatarImageViewShader">
+        <attr name="aivs_borderColor" format="color"/>
+        <attr name="aivs_borderWidth" format="dimension"/>
+        <attr name="aivs_initials" format="string"/>
     </declare-styleable>
 
     <attr name="colorAccentedSurface" format="reference"/>

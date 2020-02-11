@@ -15,7 +15,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertDpToPx
 import kotlin.math.min
 
-class AvatarImageViewMask @JvmOverloads constructor(
+class AvatarImageViewShader @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -32,11 +32,10 @@ class AvatarImageViewMask @JvmOverloads constructor(
     @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
     private lateinit var resultBm: Bitmap
-    private lateinit var maskBm: Bitmap
     private lateinit var srcBm: Bitmap
 
     private var viewRect = Rect()
-    private val maskPaint = Paint(ANTI_ALIAS_FLAG)
+    private val avatarPaint = Paint(ANTI_ALIAS_FLAG)
     private val borderPaint = Paint(ANTI_ALIAS_FLAG)
     private val textPaint = TextPaint(ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
@@ -45,13 +44,13 @@ class AvatarImageViewMask @JvmOverloads constructor(
 
     init {
         if (attrs != null) {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageViewMask)
-            borderColor = a.getColor(R.styleable.AvatarImageViewMask_aivm_borderColor,
+            val a = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageViewShader)
+            borderColor = a.getColor(R.styleable.AvatarImageViewShader_aivs_borderColor,
                                             DEFAULT_BORDER_COLOR)
             // Получаем значение в пикселях
-            borderWidth = a.getDimension(R.styleable.AvatarImageViewMask_aivm_borderWidth,
+            borderWidth = a.getDimension(R.styleable.AvatarImageViewShader_aivs_borderWidth,
                                             borderWidth)
-            initials = a.getString(R.styleable.AvatarImageViewMask_aivm_initials)
+            initials = a.getString(R.styleable.AvatarImageViewShader_aivs_initials)
                                             ?: initials
             a.recycle()
         }
@@ -60,10 +59,6 @@ class AvatarImageViewMask @JvmOverloads constructor(
     }
 
     private fun setup() {
-        with(maskPaint) {
-            color = Color.RED
-            style = Paint.Style.FILL
-        }
         with(borderPaint) {
             color = borderColor
             style = Paint.Style.STROKE
@@ -71,23 +66,15 @@ class AvatarImageViewMask @JvmOverloads constructor(
         }
     }
 
-    private fun prepareBitmaps(w: Int, h: Int) {
-        maskBm = Bitmap.createBitmap(w, h, Bitmap.Config.ALPHA_8)
-        resultBm = maskBm.copy(Bitmap.Config.ARGB_8888, true)
+    private fun prepareShader(w: Int, h: Int) {
         srcBm = drawable.toBitmap(w, h, Bitmap.Config.ARGB_8888)
-        /** Создаем холст с битмапом. Рисуем на холсте.
-           Результат рисования отражается в битмапе! */
-        Canvas(maskBm).drawOval(viewRect.toRectF(), maskPaint)
-        // Покрываем результирующий битмап масковым битмапом
-        Canvas(resultBm).drawBitmap(maskBm, null, viewRect, null)
-        // Покрываем результирующий битмап картиночным битмапом в режиме SRC_IN
-        maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        Canvas(resultBm).drawBitmap(srcBm, null, viewRect, maskPaint)
+        avatarPaint.shader = BitmapShader(srcBm, Shader.TileMode.CLAMP,
+                                                Shader.TileMode.CLAMP)
     }
 
     override fun onDraw(canvas: Canvas) {
-        Log.d("M_AvatarImageViewMask", "onDraw: ")
-        canvas.drawBitmap(resultBm, viewRect, viewRect, null)
+        Log.d("M_AvatarImageViewShader", "onDraw: ")
+        canvas.drawOval(viewRect.toRectF(), avatarPaint)
         // Чуть ужмем вьюшный прямоугольник, чтобы кольцо вписалось в границы вьюхи
         val shift = (borderWidth / 2).toInt()
         viewRect.inset(shift, shift)
@@ -95,7 +82,7 @@ class AvatarImageViewMask @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
-        Log.d("M_AvatarImageViewMask", """
+        Log.d("M_AvatarImageViewShader", """
             onMeasure 
             W- ${MeasureSpec.toString(widthSpec)} 
             H- ${MeasureSpec.toString(heightSpec)}""".trimIndent())
@@ -103,7 +90,7 @@ class AvatarImageViewMask @JvmOverloads constructor(
         // Вьюха должна быть равносторонней
         val size = min(initSize.first, initSize.second)
         setMeasuredDimension(size, size)
-        Log.d("M_AvatarImageViewMask", "onMeasure after: " +
+        Log.d("M_AvatarImageViewShader", "onMeasure after: " +
                 "$measuredWidth x $measuredHeight")
     }
 
@@ -126,7 +113,7 @@ class AvatarImageViewMask @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        Log.d("M_AvatarImageViewMask", "onSizeChanged: ")
+        Log.d("M_AvatarImageViewShader", "onSizeChanged: ")
         if (w == 0) return
         with(viewRect) {
             left = 0
@@ -134,6 +121,6 @@ class AvatarImageViewMask @JvmOverloads constructor(
             right = w
             bottom = h
         }
-        prepareBitmaps(w, h)
+        prepareShader(w, h)
     }
 }

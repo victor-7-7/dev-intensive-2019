@@ -8,12 +8,27 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/color_gray"
-    tools:context=".ui.AvatarActivity">
+    tools:context=".ui.AvatarActivity"
+    android:id="@+id/container">
 
-    <ru.skillbranch.devintensive.ui.custom.AvatarImageViewMask
+    <ru.skillbranch.devintensive.ui.custom.AvatarImageView
+        android:id="@+id/aiv"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/avatarka"/>
+
+    <Button
+        android:id="@+id/btn_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/avatarka"
-        app:aivm_borderWidth="5dp"/>
+        android:layout_marginTop="@dimen/spacing_normal_16"
+        android:text="Color" />
+
+    <Button
+        android:id="@+id/btn_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal_16"
+        android:text="Width" />
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import androidx.annotation.ColorInt
@@ -24,34 +25,45 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.truncate
 
-class AvatarImageView @JvmOverloads constructor(
+class AvatarImageViewTest @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ): ImageView(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val DEFAULT_BORDER_COLOR = Color.BLACK
+        private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH_DP = 3F
         private const val DEF_SIZE_W_DP = 60F
         private const val DEF_SIZE_H_DP = 60F
-        private const val FONT_ASPECT_RATIO = .37F
-        val bgColors = arrayOf(
-            "#7BC862",
-            "#E17076",
-            "#FAA774",
-            "#6EC9CB",
-            "#65AADD",
-            "#A695E7",
-            "#EE7AAE",
-            "#2196F3"
+        private const val FONT_ASPECT_RATIO = .41F
+        private val bgColors = arrayOf(
+            Color.parseColor("#7BC862"),
+            Color.parseColor("#E17076"),
+            Color.parseColor("#FAA774"),
+            Color.parseColor("#6EC9CB"),
+            Color.parseColor("#65AADD"),
+            Color.parseColor("#A695E7"),
+            Color.parseColor("#EE7AAE"),
+            Color.parseColor("#2196F3")
+        )
+
+        private val testArrWidth = arrayOf(7, 12, 16, 10, 5, 0)
+        private val testArrColors = arrayOf(
+            "#1C0E42",
+            "#FF0000",
+            "#0000FF",
+            "#ECECEC"
         )
     }
+    private var indxW = -1
+    private var indxC = -1
+
     private var borderWidthDp = DEFAULT_BORDER_WIDTH_DP.toInt()
     @Px private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
     @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
-    private var initialMode = false
+    private var initialMode = true
     private var animSize = 0
 
     private var viewRect = Rect()
@@ -70,11 +82,16 @@ class AvatarImageView @JvmOverloads constructor(
                                             borderWidth)
             initials = a.getString(R.styleable.AvatarImageView_aiv_initials)
                                             ?: initials
+            if (drawable != null) initialMode = false
             a.recycle()
         }
         scaleType = ScaleType.CENTER_CROP
         setup()
         setOnLongClickListener { handleLongClick() }
+        setOnClickListener {
+            indxW++
+            if (indxW > testArrWidth.size - 1) indxW = 0
+            setBorderWidth(testArrWidth[indxW]) }
     }
 
     private fun setup() {
@@ -94,6 +111,7 @@ class AvatarImageView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        Log.d("M_AvatarImageViewShader", "onDraw: ")
         if (drawable == null || initialMode) drawInitials(canvas)
         else drawAvatar(canvas)
         if (borderWidth > 0)
@@ -123,12 +141,12 @@ class AvatarImageView @JvmOverloads constructor(
         val len = bgColors.size
         val d = b / len.toDouble()
         val index = ((d - truncate(d)) * len).toInt()
-        return Color.parseColor((bgColors[index]))
+        return bgColors[index]
     }
 
     private fun handleLongClick(): Boolean {
-        val va = ValueAnimator.ofInt(width, (width * 1.2).toInt()).apply {
-            duration = 150
+        val va = ValueAnimator.ofInt(width, width * 2).apply {
+            duration = 600
             interpolator = LinearInterpolator()
             repeatMode = ValueAnimator.REVERSE
             repeatCount = 1
@@ -144,7 +162,19 @@ class AvatarImageView @JvmOverloads constructor(
 
     private fun toggleMode() {
         initialMode = !initialMode
-        invalidate()
+        if (initialMode) {
+            indxC++
+            //------------------
+//            if (indxC > testArrColors.size - 1) indxC = 0
+//            setBorderColor(testArrColors[indxC])
+            //------------------
+            val colorArr = resources.obtainTypedArray(R.array.color_arr)
+            if (indxC > colorArr.length() - 1) indxC = 0
+            val colorId = colorArr.peekValue(indxC).resourceId
+            setBorderColor(colorId)
+            colorArr.recycle()
+        }
+        else invalidate()
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
@@ -175,6 +205,7 @@ class AvatarImageView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        Log.d("M_AvatarImageViewShader", "onSizeChanged: ")
         if (w == 0) return
         with(viewRect) {
             left = 0
