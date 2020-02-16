@@ -39,6 +39,7 @@ class GroupActivity : AppCompatActivity() {
         val searchView = searchItem?.actionView as SearchView
         searchView.queryHint = "Введите имя пользователя"
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.handleSearchQuery(query)
                 return true
@@ -65,7 +66,9 @@ class GroupActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        userAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
+        userAdapter = UserAdapter {
+            viewModel.handleSelectedItem(it.id)
+        }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         with(rv_user_list) {
             adapter = userAdapter
@@ -93,6 +96,19 @@ class GroupActivity : AppCompatActivity() {
         if (isShow) fab.show() else fab.hide()
     }
 
+    private fun updateChips(userItems: List<UserItem>) {
+        chip_group.visibility = if (userItems.isEmpty()) View.GONE else View.VISIBLE
+
+        val users = userItems.associateBy { user -> user.id }.toMutableMap()
+        val views = chip_group.children.associateBy { view -> view.tag }
+
+        for ((k, v) in views) {
+            if (!users.containsKey(k)) chip_group.removeView(v)
+            else users.remove(k)
+        }
+        users.forEach { (_, user) -> addChipToGroup(user) }
+    }
+
     private fun addChipToGroup(user: UserItem) {
         val chip = Chip(this).apply {
             text = user.fullName
@@ -105,21 +121,8 @@ class GroupActivity : AppCompatActivity() {
                                                 R.color.color_primary_light))
             setTextColor(Color.WHITE)
         }
-        chip.setOnCloseIconClickListener { viewModel.handleRemoveChip(it.tag.toString()) }
+        chip.setOnCloseIconClickListener {
+            viewModel.handleRemoveChip(it.tag.toString()) }
         chip_group.addView(chip)
-    }
-
-    private fun updateChips(userItems: List<UserItem>) {
-        chip_group.visibility = if (userItems.isEmpty()) View.GONE else View.VISIBLE
-
-        val users = userItems.associateBy { user -> user.id }
-                                .toMutableMap()
-        val views = chip_group.children.associateBy { view -> view.tag }
-
-        for ((k, v) in views) {
-            if (!users.containsKey(k)) chip_group.removeView(v)
-            else users.remove(k)
-        }
-        users.forEach { (_, user) -> addChipToGroup(user) }
     }
 }

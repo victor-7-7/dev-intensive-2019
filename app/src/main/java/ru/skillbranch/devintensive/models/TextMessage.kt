@@ -13,7 +13,7 @@ class TextMessage(
     chat: Chat,
     isIncoming: Boolean = false,
     date: Date = Date(),
-    isReaded:Boolean = false,
+    isReaded: Boolean = false,
     var text: String?
 ) : BaseMessage(id, from, chat, isIncoming, date, isReaded)
 

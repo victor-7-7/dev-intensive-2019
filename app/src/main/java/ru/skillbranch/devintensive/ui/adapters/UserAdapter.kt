@@ -61,7 +61,7 @@ class UserAdapter(private val listener: (UserItem) -> Unit)
             sv_indicator.visibility = if(user.isOnline) View.VISIBLE else View.GONE
             tv_user_name.text = user.fullName
             tv_last_activity.text = user.lastActivity
-            iv_selected.visibility = if(user.isOnline) View.VISIBLE else View.GONE
+            iv_selected.visibility = if(user.isSelected) View.VISIBLE else View.GONE
             itemView.setOnClickListener {
                 listener.invoke(user)
             }

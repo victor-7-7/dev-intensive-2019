@@ -15,7 +15,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.models.data.ChatType
 
-class ChatAdapter(val listener: (ChatItem) -> Unit)
+class ChatAdapter(private val listener: (ChatItem) -> Unit)
             : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
 
     companion object {
@@ -106,8 +106,8 @@ class ChatAdapter(val listener: (ChatItem) -> Unit)
                 text = item.lastMessageDate
             }
             with(tv_counter_single){
-//                visibility = if(item.messageCount > 0)
-//                    View.VISIBLE else View.GONE
+                visibility = if(item.messageCount > 0)
+                    View.VISIBLE else View.GONE
                 text = item.messageCount.toString()
             }
             tv_title_single.text = item.title
@@ -139,8 +139,8 @@ class ChatAdapter(val listener: (ChatItem) -> Unit)
                 text = item.lastMessageDate
             }
             with(tv_counter_group){
-//                visibility = if(item.messageCount > 0)
-//                    View.VISIBLE else View.GONE
+                visibility = if(item.messageCount > 0)
+                    View.VISIBLE else View.GONE
                 text = item.messageCount.toString()
             }
             tv_title_group.text = item.title

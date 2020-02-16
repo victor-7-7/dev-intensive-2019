@@ -32,10 +32,10 @@ class AvatarImageView @JvmOverloads constructor(
 
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.BLACK
-        private const val DEFAULT_BORDER_WIDTH_DP = 3F
-        private const val DEF_SIZE_W_DP = 60F
-        private const val DEF_SIZE_H_DP = 60F
-        private const val FONT_ASPECT_RATIO = .37F
+        private const val DEFAULT_BORDER_WIDTH_DP = 2F
+        private const val DEF_SIZE_W_DP = 40F
+        private const val DEF_SIZE_H_DP = 40F
+        private const val FONT_ASPECT_RATIO = .35F
         val bgColors = arrayOf(
             "#7BC862",
             "#E17076",
@@ -160,7 +160,7 @@ class AvatarImageView @JvmOverloads constructor(
         return when(MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
             MeasureSpec.UNSPECIFIED to MeasureSpec.UNSPECIFIED ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                context.convertDpToPx(DEF_SIZE_W_DP).toInt()
+                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY,
             MeasureSpec.UNSPECIFIED to MeasureSpec.AT_MOST ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to

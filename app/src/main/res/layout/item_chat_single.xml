@@ -5,7 +5,7 @@
     android:layout_height="@dimen/item_size"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="@dimen/spacing_normal_12"
-    android:background="@android:color/white">
+    android:background="@color/color_gray_light">
 
     <ru.skillbranch.devintensive.ui.custom.AvatarImageView
         android:id="@+id/iv_avatar_single"
@@ -50,6 +50,8 @@
         android:textColor="@color/color_gray_dark"
         android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/font_normal_14"
+        android:ellipsize="end"
+        android:maxLines="1"
         tools:text="Когда я проходил интенсив, я мало спал"/>
 
     <TextView

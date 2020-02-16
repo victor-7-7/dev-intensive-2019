@@ -434,7 +434,8 @@ object DataGenerator {
         return list
     }
 
-    private fun generateRandomMessages(chat: Chat, users: List<User>): MutableList<BaseMessage> {
+    private fun generateRandomMessages(chat: Chat, users: List<User>)
+                                        : MutableList<BaseMessage> {
         val list = mutableListOf<BaseMessage>()
         val rnd = (0..10).random()
         for (i in 0 until rnd) {
@@ -465,7 +466,7 @@ object DataGenerator {
     }
 
     private fun randomUser(users: List<User>): User {
-        val rndInd = (0 until users.size).random()
+        val rndInd = (users.indices).random()
         return users[rndInd]
     }
 
