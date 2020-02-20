@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.extensions
 
+import java.util.*
+
 const val MAX_CHARS = 16
 
 fun String.truncate(maxChars: Int = MAX_CHARS): String {

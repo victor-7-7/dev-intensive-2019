@@ -52,11 +52,12 @@ class UserAdapter(private val listener: (UserItem) -> Unit)
             get() = itemView
 
         fun bind(user: UserItem, listener: (UserItem) -> Unit) {
+
+            iv_avatar_user.assignInitials(user.initials)
             if (user.avatar != null) {
                 Glide.with(itemView).load(user.avatar).into(iv_avatar_user)
             } else {
                 Glide.with(itemView).clear(iv_avatar_user)
-                iv_avatar_user.assignInitials(user.initials)
             }
             sv_indicator.visibility = if(user.isOnline) View.VISIBLE else View.GONE
             tv_user_name.text = user.fullName

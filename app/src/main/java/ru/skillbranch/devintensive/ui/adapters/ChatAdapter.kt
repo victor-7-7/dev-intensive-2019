@@ -1,16 +1,18 @@
 package ru.skillbranch.devintensive.ui.adapters
 
-import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_chat_archive.*
 import kotlinx.android.synthetic.main.item_chat_group.*
 import kotlinx.android.synthetic.main.item_chat_single.*
+import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.models.data.ChatType
@@ -40,8 +42,8 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                                     R.layout.item_chat_single, parent, false))
             GROUP_TYPE -> GroupViewHolder(inflater.inflate(
                                     R.layout.item_chat_group, parent, false))
-            else -> SingleViewHolder(inflater.inflate(
-                                    R.layout.item_chat_single, parent, false))
+            else -> ArchiveViewHolder(inflater.inflate(
+                                    R.layout.item_chat_archive, parent, false))
         }
 /*        val convertView = inflater.inflate(R.layout.item_chat_single,
                                     parent, false)
@@ -90,10 +92,12 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                             ItemTouchViewHolder {
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
+
+            iv_avatar_single.assignInitials(item.initials)
+
             if (item.avatar == null) {
                 Glide.with(itemView)
                     .clear(iv_avatar_single)
-                iv_avatar_single.assignInitials(item.initials)
             } else {
                 Glide.with(itemView)
                     .load(item.avatar)
@@ -118,11 +122,13 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.setBackgroundColor(ContextCompat.getColor(
+                                    App.applicationContext(), R.color.color_gray))
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
+            itemView.setBackgroundColor(ContextCompat.getColor(
+                                    App.applicationContext(), R.color.color_gray_light))
         }
     }
 
@@ -131,6 +137,7 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                                 ItemTouchViewHolder {
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
+
             iv_avatar_group.assignInitials(item.initials)
 
             with(tv_date_group){
@@ -145,8 +152,8 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
             }
             tv_title_group.text = item.title
             tv_message_group.text = item.shortDescription
-            tv_message_author.text = item.author
-            tv_message_author.visibility = if(item.messageCount > 0)
+            tv_message_author_group.text = item.author
+            tv_message_author_group.visibility = if(item.messageCount > 0)
                                     View.VISIBLE else View.GONE
             itemView.setOnClickListener {
                 listener.invoke(item)
@@ -154,11 +161,52 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.setBackgroundColor(ContextCompat.getColor(
+                                    App.applicationContext(), R.color.color_gray))
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
+            itemView.setBackgroundColor(ContextCompat.getColor(
+                                    App.applicationContext(), R.color.color_gray_light))
+        }
+    }
+
+    inner class ArchiveViewHolder(convertView: View)
+                                    : ChatItemViewHolder(convertView),
+                                    ItemTouchViewHolder {
+
+        override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
+
+            iv_avatar_archive.assignInitials(item.initials)
+
+            with(tv_date_archive){
+                visibility = if(item.lastMessageDate != null)
+                    View.VISIBLE else View.GONE
+                text = item.lastMessageDate
+            }
+            with(tv_counter_archive){
+                visibility = if(item.messageCount > 0)
+                    View.VISIBLE else View.GONE
+                text = item.messageCount.toString()
+            }
+            tv_title_archive.text = item.title
+            tv_message_archive.text = item.shortDescription
+            tv_message_author_archive.text = item.author
+            tv_message_author_archive.visibility = if(item.messageCount > 0)
+                View.VISIBLE else View.GONE
+            itemView.setOnClickListener {
+                listener.invoke(item)
+            }
+        }
+
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(ContextCompat.getColor(
+                                App.applicationContext(), R.color.color_gray))
+        }
+
+        override fun onItemCleared() {
+            itemView.setBackgroundColor(ContextCompat.getColor(
+                                App.applicationContext(), R.color.color_gray_light))
         }
     }
 }

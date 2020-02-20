@@ -21,18 +21,19 @@ data class Chat(
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageDate(): Date? {
+    fun lastMessageDate(): Date {
 //        var date = messages.first().date
 //        messages.forEach { if (it.date > date) date = it.date }
 //        return date
-        return messages.lastOrNull()?.date
+        return messages.lastOrNull()!!.date
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun lastMessageShort(): Pair<String, String?> =
         when(val msg = messages.lastOrNull()) {
             is TextMessage -> (msg.text ?: "") to msg.from.firstName
-            is ImageMessage -> "${msg.from.firstName} отправил фото" to msg.from.firstName
+            is ImageMessage -> "${msg.from.firstName} отправил фото" to
+                                            msg.from.firstName
             else -> "???" to "!!!"
     }
 
@@ -48,8 +49,10 @@ data class Chat(
                 "${user.firstName ?: "Fn"} ${user.lastName ?: ""}".trim(),
                 lastMessageShort().first,
                 unreadableMessageCount(),
-                lastMessageDate()?.shortFormat(),
-                user.isOnline
+                lastMessageDate().shortFormat(),
+                user.isOnline,
+                if (isArchived) ChatType.ARCHIVE else ChatType.SINGLE,
+                lastMessDate = lastMessageDate()
             )
         } else {
             ChatItem(
@@ -59,14 +62,14 @@ data class Chat(
                 title,
                 lastMessageShort().first,
                 unreadableMessageCount(),
-                lastMessageDate()?.shortFormat(),
+                lastMessageDate().shortFormat(),
                 false,
-                ChatType.GROUP,
-                lastMessageShort().second
+                if (isArchived) ChatType.ARCHIVE else ChatType.GROUP,
+                lastMessageShort().second,
+                lastMessageDate()
             )
         }
     }
-
 }
 
 enum class ChatType {

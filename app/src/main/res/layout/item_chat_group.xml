@@ -23,6 +23,7 @@
         android:layout_toEndOf="@id/iv_avatar_group"
         android:layout_toStartOf="@id/tv_date_group"
         android:layout_marginEnd="@dimen/spacing_normal_16"
+        android:layout_marginBottom="@dimen/spacing_small_6"
         android:textColor="@color/color_primary"
         android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/font_normal_14"
@@ -31,7 +32,7 @@
         tools:text="Chat title Chat title Chat title Chat title Chat title"/>
 
     <TextView
-        android:id="@+id/tv_message_author"
+        android:id="@+id/tv_message_author_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title_group"
@@ -47,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title_group"
-        android:layout_toEndOf="@id/tv_message_author"
+        android:layout_toEndOf="@id/tv_message_author_group"
         android:layout_toStartOf="@id/tv_counter_group"
         android:layout_marginEnd="@dimen/spacing_normal_12"
         android:textColor="@color/color_gray_dark"

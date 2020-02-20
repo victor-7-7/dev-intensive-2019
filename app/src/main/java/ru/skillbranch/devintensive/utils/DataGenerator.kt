@@ -437,7 +437,7 @@ object DataGenerator {
     private fun generateRandomMessages(chat: Chat, users: List<User>)
                                         : MutableList<BaseMessage> {
         val list = mutableListOf<BaseMessage>()
-        val rnd = (0..10).random()
+        val rnd = (1..12).random()
         for (i in 0 until rnd) {
             val user = randomUser(users)
             list.add(

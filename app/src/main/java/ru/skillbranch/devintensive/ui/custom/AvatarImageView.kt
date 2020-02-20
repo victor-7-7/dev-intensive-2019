@@ -35,7 +35,7 @@ class AvatarImageView @JvmOverloads constructor(
         private const val DEFAULT_BORDER_WIDTH_DP = 2F
         private const val DEF_SIZE_W_DP = 40F
         private const val DEF_SIZE_H_DP = 40F
-        private const val FONT_ASPECT_RATIO = .35F
+        private const val FONT_ASPECT_RATIO = .4F
         val bgColors = arrayOf(
             "#7BC862",
             "#E17076",
@@ -127,8 +127,8 @@ class AvatarImageView @JvmOverloads constructor(
     }
 
     private fun handleLongClick(): Boolean {
-        val va = ValueAnimator.ofInt(width, (width * 1.2).toInt()).apply {
-            duration = 150
+        val va = ValueAnimator.ofInt(width, (width * 1.33).toInt()).apply {
+            duration = 200
             interpolator = LinearInterpolator()
             repeatMode = ValueAnimator.REVERSE
             repeatCount = 1
