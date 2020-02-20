@@ -54,6 +54,7 @@ class UserAdapter(private val listener: (UserItem) -> Unit)
         fun bind(user: UserItem, listener: (UserItem) -> Unit) {
 
             iv_avatar_user.assignInitials(user.initials)
+
             if (user.avatar != null) {
                 Glide.with(itemView).load(user.avatar).into(iv_avatar_user)
             } else {

@@ -14,6 +14,6 @@ data class ChatItem (
     val isOnline: Boolean = false,
     val chatType : ChatType = ChatType.SINGLE,
     var author :String? = null,
-    var lastMessDate: Date = Date()
+    var lastMessDate: Date?
 ) {
 }
