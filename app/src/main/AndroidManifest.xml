@@ -25,6 +25,7 @@
             android:name=".ui.profile.ProfileActivity"
             android:theme="@style/SplashTheme" />
         <activity android:name=".ui.AvatarActivity"/>
+        <activity android:name=".ui.archive.ArchiveActivity"/>
     </application>
 
 </manifest>

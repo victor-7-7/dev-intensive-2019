@@ -27,33 +27,32 @@
         android:id="@+id/tv_title_single"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/iv_avatar_single"
-        android:layout_toStartOf="@id/tv_date_single"
         android:layout_marginStart="@dimen/spacing_normal_16"
         android:layout_marginEnd="@dimen/spacing_normal_16"
-        android:layout_marginBottom="@dimen/spacing_small_6"
-        android:textColor="@color/color_primary"
+        android:layout_toStartOf="@id/tv_date_single"
+        android:layout_toEndOf="@id/iv_avatar_single"
         android:fontFamily="sans-serif-medium"
-        android:textSize="@dimen/font_normal_14"
         android:maxLines="1"
-        tools:text="Chat title"/>
+        android:textColor="@color/color_primary"
+        android:textSize="@dimen/font_normal_14"
+        tools:text="Chat title" />
 
 
     <TextView
         android:id="@+id/tv_message_single"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/iv_avatar_single"
-        android:layout_toStartOf="@id/tv_counter_single"
         android:layout_below="@id/tv_title_single"
         android:layout_marginStart="@dimen/spacing_normal_16"
         android:layout_marginEnd="@dimen/spacing_normal_16"
-        android:textColor="@color/color_gray_dark"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="@dimen/font_normal_14"
+        android:layout_toStartOf="@id/tv_counter_single"
+        android:layout_toEndOf="@id/iv_avatar_single"
         android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
         android:maxLines="1"
-        tools:text="Когда я проходил интенсив, я мало спал"/>
+        android:textColor="@color/color_gray_dark"
+        android:textSize="@dimen/font_normal_14"
+        tools:text="Когда я проходил интенсив, я мало спал" />
 
     <TextView
         android:id="@+id/tv_date_single"

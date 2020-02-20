@@ -16,11 +16,6 @@ class MainViewModel : ViewModel() {
                                 .map { it.toChatItem() }
                                 .sortedBy { it.id.toInt() }
     }
-    private val archivedChats = Transformations.map(chatRepository.loadChats()) {
-            chats -> return@map chats.filter { it.isArchived }
-                                .map { it.toChatItem() }
-                                .sortedBy { it.id.toInt() }
-    }
 
     fun getChatData(): LiveData<List<ChatItem>> {
         val result = MediatorLiveData<List<ChatItem>>()
@@ -35,21 +30,9 @@ class MainViewModel : ViewModel() {
         return result
     }
 
-    fun getArchivedChatData(): LiveData<List<ChatItem>> {
-        return archivedChats
-    }
-
     fun handleSearchQuery(text: String?) {
         query.value = text
     }
-
-/*    fun addItems() {
-        val newItems = DataGenerator.generateChatsWithOffset(
-                            chats.value!!.size, 5).map { it.toChatItem() }
-        val copy = chats.value!!.toMutableList()
-        copy.addAll(newItems)
-        chats.value = copy.sortedBy { it.id.toInt() }
-    }*/
 
     fun addToArchive(chatId: String) {
         val chat = chatRepository.find(chatId)

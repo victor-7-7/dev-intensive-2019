@@ -19,23 +19,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/item_archive"
-            layout="@layout/item_chat_archive_iv" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_chat_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_chat_single"/>
-
-    </LinearLayout>
+        tools:listitem="@layout/item_chat_single"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

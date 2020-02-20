@@ -13,10 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_chat_archive_iv.tv_counter_archive
-import kotlinx.android.synthetic.main.item_chat_archive_iv.tv_date_archive
-import kotlinx.android.synthetic.main.item_chat_archive_iv.tv_message_archive
-import kotlinx.android.synthetic.main.item_chat_archive_iv.tv_message_author_archive
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
@@ -93,22 +89,6 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.getChatData().observe(this, Observer {
             chatAdapter.updateData(it)
-        })
-        viewModel.getArchivedChatData().observe(this, Observer {
-            if (it.isNotEmpty()) {
-                item_archive.visibility = View.VISIBLE
-                var count = 0
-                var ci = it.first()
-                it.forEach { chatI ->
-                    count += chatI.messageCount
-                    if (ci.lastMessDate < chatI.lastMessDate) ci = chatI
-                }
-                tv_message_author_archive.text = ci.author
-                tv_message_archive.text = ci.shortDescription
-                tv_date_archive.text = ci.lastMessageDate
-                tv_counter_archive.text = count.toString()
-            }
-            else item_archive.visibility = View.GONE
         })
     }
 
