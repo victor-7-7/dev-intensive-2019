@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.ui.custom
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
@@ -7,19 +8,24 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.annotation.Px
+import androidx.core.animation.doOnRepeat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toRectF
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertDpToPx
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.truncate
 
-class AvatarImageView @JvmOverloads constructor(
+class AvatarImageViewDraft @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -28,6 +34,8 @@ class AvatarImageView @JvmOverloads constructor(
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.BLACK
         private const val DEFAULT_BORDER_WIDTH_DP = 2F
+        private const val DEF_SIZE_W_DP = 40F
+        private const val DEF_SIZE_H_DP = 40F
         private const val FONT_ASPECT_RATIO = .4F
         val bgColors = arrayOf(
             "#7BC862",
@@ -45,6 +53,7 @@ class AvatarImageView @JvmOverloads constructor(
     @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
     private var initialMode = false
+    private var animSize = 0
 
     private var viewRect = Rect()
     private var borderRect = Rect()
@@ -67,21 +76,6 @@ class AvatarImageView @JvmOverloads constructor(
         scaleType = ScaleType.CENTER_CROP
         setup()
         setOnLongClickListener { handleLongClick() }
-}
-
-    private fun handleLongClick(): Boolean {
-        pivotX = 0f
-        animate().setDuration(300).scaleXBy(0.33f).scaleYBy(0.27f)
-        .withEndAction {
-            toggleMode()
-            animate().setDuration(300).scaleXBy(-0.33f).scaleYBy(-0.27f)
-        }
-        return true
-    }
-
-    private fun toggleMode() {
-        initialMode = !initialMode
-        invalidate()
     }
 
     private fun setup() {
@@ -131,6 +125,65 @@ class AvatarImageView @JvmOverloads constructor(
         val d = b / len.toDouble()
         val index = ((d - truncate(d)) * len).toInt()
         return Color.parseColor((bgColors[index]))
+    }
+
+    private fun handleLongClick(): Boolean {
+        val va = ValueAnimator.ofInt(width, (width * 1.33).toInt()).apply {
+            duration = 700
+            interpolator = LinearInterpolator()
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = 1
+        }
+        va.addUpdateListener {
+            Log.d("M_AvatarImageView", "ValueAnimator update: " +
+                    "animSize=$animSize animatedValue=${it.animatedValue}")
+            animSize = it.animatedValue as Int
+            requestLayout()
+        }
+        va.doOnRepeat { toggleMode() }
+        va.start()
+        return true
+    }
+
+    private fun toggleMode() {
+        initialMode = !initialMode
+        invalidate()
+    }
+
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        Log.d("M_AvatarImageView", """
+            onMeasure 
+            W- ${MeasureSpec.toString(widthSpec)} 
+            H- ${MeasureSpec.toString(heightSpec)}""".trimIndent())
+        val initSize = resolveDefaultSize(widthSpec to heightSpec)
+        Log.d("M_AvatarImageView", "onMeasure after resolveDefaultSize: " +
+                "${initSize.first} x ${initSize.second}")
+        // Вьюха должна быть равносторонней
+        val size = min(initSize.first, initSize.second)
+        // Добавим возможность анимировать размер вьюхи по лонгклику
+        val aSize = max(animSize, size)
+        Log.d("M_AvatarImageView", "onMeasure: size=$size " +
+                "animSize=$animSize aSize=$aSize")
+        setMeasuredDimension(aSize, aSize)
+        Log.d("M_AvatarImageView", "onMeasure after setMeasuredDimension: " +
+                "$measuredWidth x $measuredHeight")
+    }
+
+    private fun resolveDefaultSize(spec: Pair<Int, Int>): Pair<Int, Int> {
+        return when(MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
+            MeasureSpec.UNSPECIFIED to MeasureSpec.UNSPECIFIED ->
+                context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
+                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+            MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY,
+            MeasureSpec.UNSPECIFIED to MeasureSpec.AT_MOST ->
+                context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
+                MeasureSpec.getSize(spec.second)
+            MeasureSpec.EXACTLY to MeasureSpec.UNSPECIFIED,
+            MeasureSpec.AT_MOST to MeasureSpec.UNSPECIFIED ->
+                MeasureSpec.getSize(spec.first) to
+                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+            else -> MeasureSpec.getSize(spec.first) to MeasureSpec.getSize(spec.second)
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

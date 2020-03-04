@@ -11,7 +11,7 @@
     tools:context=".ui.AvatarActivity"
     android:id="@+id/container">
 
-    <ru.skillbranch.devintensive.ui.custom.AvatarImageView
+    <ru.skillbranch.devintensive.ui.custom.AvatarImageViewTest
         android:id="@+id/aiv"
         android:layout_width="150dp"
         android:layout_height="150dp"

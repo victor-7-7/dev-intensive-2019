@@ -3,7 +3,6 @@ package ru.skillbranch.devintensive.ui.custom
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.ImageView
@@ -31,16 +30,11 @@ class AvatarImageViewShader @JvmOverloads constructor(
     @Px private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
     @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
-    private lateinit var resultBm: Bitmap
     private lateinit var srcBm: Bitmap
 
     private var viewRect = Rect()
     private val avatarPaint = Paint(ANTI_ALIAS_FLAG)
     private val borderPaint = Paint(ANTI_ALIAS_FLAG)
-    private val textPaint = TextPaint(ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
-        typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
-    }
 
     init {
         if (attrs != null) {
@@ -98,7 +92,7 @@ class AvatarImageViewShader @JvmOverloads constructor(
         return when(MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
             MeasureSpec.UNSPECIFIED to MeasureSpec.UNSPECIFIED ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                context.convertDpToPx(DEF_SIZE_W_DP).toInt()
+                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY,
             MeasureSpec.UNSPECIFIED to MeasureSpec.AT_MOST ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_avatar.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.ui.custom.AvatarImageView
+import ru.skillbranch.devintensive.ui.custom.AvatarImageViewDraft
 
 private const val viewId = 10
 
@@ -22,7 +22,7 @@ class AvatarActivity : AppCompatActivity() {
         container.addView(view)*/
 
         btn_color.setOnClickListener {
-            aiv.setBorderColor((AvatarImageView.bgColors).random())
+            aiv.setBorderColor((AvatarImageViewDraft.bgColors).random())
         }
 
         btn_width.setOnClickListener {

@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
+import ru.skillbranch.devintensive.models.data.ChatType
 
 class ChatItemTouchHelperCallback(
     private val adapter: ChatAdapter,
+    private val fromMainActivity: Boolean = true,
     private val swipeListener: (ChatItem)->Unit)
     : ItemTouchHelper.Callback() {
 
@@ -23,7 +25,10 @@ class ChatItemTouchHelperCallback(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        return if (viewHolder is ItemTouchViewHolder) {
+        return if (viewHolder is ItemTouchViewHolder
+            // Если не пытаемся в MainActivity свайпнуть архивный айтем
+            && !(fromMainActivity && viewHolder.adapterPosition == 0
+            && adapter.items[0].chatType == ChatType.ARCHIVE)) {
             makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.START)
         } else {
             makeFlag(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.START)
@@ -87,8 +92,9 @@ class ChatItemTouchHelperCallback(
     }
 
     private fun drawIcon(c: Canvas, itemView: View, dX: Float) {
-        val icon = itemView.resources.getDrawable(R.drawable.ic_archive_black_24dp,
-                                                itemView.context.theme)
+        val resId = if (fromMainActivity) R.drawable.ic_archive_white_24dp
+                                    else R.drawable.ic_unarchive_white_24dp
+        val icon = itemView.resources.getDrawable(resId, itemView.context.theme)
         val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
         val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)
         val margin = (itemView.bottom - itemView.top - iconSize) / 2

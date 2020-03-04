@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.models.data.ChatType
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
+import ru.skillbranch.devintensive.ui.archive.ArchiveActivity
 import ru.skillbranch.devintensive.ui.group.GroupActivity
 import ru.skillbranch.devintensive.viewmodels.MainViewModel
 
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // После заставки (splash screen) возвращаем для активити app-тему
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initToolbar()
@@ -58,16 +62,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         chatAdapter = ChatAdapter {
-            Snackbar.make(rv_chat_list, "Click on ${it.title}",
-                                    Snackbar.LENGTH_LONG).show()
+            if (it.id.toInt() == -1) {
+                startActivity(Intent(this, ArchiveActivity::class.java))
+//                Snackbar.make(rv_chat_list,"Кликнут архив", Snackbar.LENGTH_LONG).show()
+            }
+            else Snackbar.make(rv_chat_list, "Click on ${it.title}",
+                                Snackbar.LENGTH_LONG).show()
         }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         // Если аргумент-лямбда последний, то его можно вынести за скобки
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
+            val hadNotArchive = chatAdapter.items[0].chatType != ChatType.ARCHIVE
             viewModel.addToArchive(it.id)
             Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?",
                 Snackbar.LENGTH_LONG)
                 .setAction("Undo", Listener(it.id, viewModel)).show()
+            // Если список близок к началу и архивного айтема еще в списке не было
+            if (it.id.toInt() < 15 && hadNotArchive)
+                // Скроллим список вниз, чтобы показать на экране архивный айтем
+                rv_chat_list.post { rv_chat_list.smoothScrollToPosition(0) }
         }
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(rv_chat_list)

@@ -11,7 +11,7 @@ abstract class BaseMessage(
     val id: String,
     val from: User,
     val chat: Chat,
-    val isIncoming: Boolean = true,
+    val isIncoming: Boolean = false,
     val date: Date = Date(),
     var isReaded: Boolean = false
 

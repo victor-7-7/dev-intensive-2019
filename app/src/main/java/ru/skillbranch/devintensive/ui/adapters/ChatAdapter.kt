@@ -1,10 +1,13 @@
 package ru.skillbranch.devintensive.ui.adapters
 
 import android.util.Log
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,7 +20,8 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.models.data.ChatType
 
-class ChatAdapter(private val listener: (ChatItem) -> Unit)
+class ChatAdapter(private val fromMainActivity: Boolean = true,
+                  private val listener: (ChatItem) -> Unit)
             : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
 
     companion object {
@@ -27,6 +31,13 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
     }
 
     var items: List<ChatItem> = listOf()
+    private var scrollOrFlingTouchEvent = false
+    private val gestureDetector = GestureDetectorCompat(
+                                App.applicationContext(), ClickListener())
+
+    init {
+        gestureDetector.setIsLongpressEnabled(false)
+    }
 
     override fun getItemViewType(position: Int): Int =
         when (items[position].chatType) {
@@ -42,26 +53,25 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                                     R.layout.item_chat_single, parent, false))
             GROUP_TYPE -> GroupViewHolder(inflater.inflate(
                                     R.layout.item_chat_group, parent, false))
-            else -> SingleViewHolder(inflater.inflate(
-                                    R.layout.item_chat_single, parent, false))
+            else -> {
+                val layoutRes = if (fromMainActivity) R.layout.item_chat_archive_sum
+                                else R.layout.item_chat_archive
+                ArchiveViewHolder(inflater.inflate(layoutRes, parent, false))
+            }
         }
-/*        val convertView = inflater.inflate(R.layout.item_chat_single,
-                                    parent, false)
-        Log.d("M_ChatAdapter", "onCreateViewHolder")
-        return SingleViewHolder(convertView)*/
     }
 
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ChatItemViewHolder, position: Int) {
-        Log.d("M_ChatAdapter", "onBindViewHolder $position")
+//        Log.d("M_ChatAdapter", "onBindViewHolder $position")
         holder.bind(items[position], listener)
     }
 
     fun updateData(data: List<ChatItem>){
-        Log.d("M_ChatAdapter", "update data adapter - " +
-                "new data ${data.size} hash : ${data.hashCode()} " +
-                "old data ${items.size} hash : ${items.hashCode()}")
+//        Log.d("M_ChatAdapter", "update data adapter - " +
+//                "new data ${data.size} hash : ${data.hashCode()} " +
+//                "old data ${items.size} hash : ${items.hashCode()}")
 
         val diffCallback = object: DiffUtil.Callback() {
             override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean
@@ -95,14 +105,9 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
 
             iv_avatar_single.assignInitials(item.initials)
 
-            if (item.avatar == null) {
-                Glide.with(itemView)
-                    .clear(iv_avatar_single)
-            } else {
-                Glide.with(itemView)
-                    .load(item.avatar)
-                    .into(iv_avatar_single)
-            }
+            if (item.avatar == null) Glide.with(itemView).clear(iv_avatar_single)
+             else Glide.with(itemView).load(item.avatar).into(iv_avatar_single)
+
             sv_indicator.visibility = if(item.isOnline) View.VISIBLE else View.GONE
             with(tv_date_single){
                 visibility = if(item.lastMessageDate != null)
@@ -115,7 +120,7 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                 text = item.messageCount.toString()
             }
             tv_title_single.text = item.title
-            tv_message_single.text = item.shortDescription
+            tv_message_single.text = item.shortDescription?.trim()
             itemView.setOnClickListener {
                 listener.invoke(item)
             }
@@ -151,8 +156,8 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                 text = item.messageCount.toString()
             }
             tv_title_group.text = item.title
-            tv_message_group.text = item.shortDescription
-            tv_message_author_group.text = item.author
+            tv_message_group.text = item.shortDescription?.trim()
+            tv_message_author_group.text = item.author?.trim()
             tv_message_author_group.visibility = if(item.messageCount > 0)
                                     View.VISIBLE else View.GONE
             itemView.setOnClickListener {
@@ -177,7 +182,11 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
 
-            iv_avatar_archive.assignInitials(item.initials)
+            if (!fromMainActivity) {
+                iv_avatar_archive.assignInitials(item.initials)
+                if (item.avatar != null)
+                    Glide.with(itemView).load(item.avatar).into(iv_avatar_archive)
+            }
 
             with(tv_date_archive){
                 visibility = if(item.lastMessageDate != null)
@@ -190,11 +199,28 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                 text = item.messageCount.toString()
             }
             tv_title_archive.text = item.title
-            tv_message_archive.text = item.shortDescription
-            tv_message_author_archive.text = item.author
-            tv_message_author_archive.visibility = if(item.messageCount > 0)
-                View.VISIBLE else View.GONE
-            itemView.setOnClickListener {
+            // В MainActivity автор последнего архивного сообщения всегда есть
+            // (так суммарный архивный ChatItem создается). В ArchiveActivity
+            // у архивного ChatItem в поле author будет null для chat_single
+            // и будет имя автора последнего сообщения в чате для chat_group
+            if (item.author == null) tv_message_author_archive.visibility = View.GONE
+            else tv_message_author_archive.text = item.author?.trim()
+            tv_message_archive.text = item.shortDescription?.trim()
+
+            if (fromMainActivity) {
+                itemView.setOnTouchListener { _, ev ->
+                    // Анализируем жест
+                    gestureDetector.onTouchEvent(ev)
+                    // Если прилетело Up-событие, НЕ завершающее скролл или флин,
+                    // то обрабатываем его как клик
+                    if (ev!!.actionMasked == MotionEvent.ACTION_UP
+                        && !scrollOrFlingTouchEvent) {
+                        listener.invoke(item)
+                    }
+                    true
+                }
+            }
+            else itemView.setOnClickListener {
                 listener.invoke(item)
             }
         }
@@ -209,4 +235,21 @@ class ChatAdapter(private val listener: (ChatItem) -> Unit)
                                 App.applicationContext(), R.color.color_gray_light))
         }
     }
+
+    inner class ClickListener: SimpleOnGestureListener() {
+        override fun onDown(e: MotionEvent?): Boolean {
+            scrollOrFlingTouchEvent = false
+            return super.onDown(e)
+        }
+        override fun onFling(e1: MotionEvent?, e2: MotionEvent?,
+                        velocityX: Float, velocityY: Float): Boolean {
+            scrollOrFlingTouchEvent = true
+            return super.onFling(e1, e2, velocityX, velocityY)
+        }
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?,
+                        distanceX: Float, distanceY: Float): Boolean {
+            scrollOrFlingTouchEvent = true
+            return super.onScroll(e1, e2, distanceX, distanceY)
+        }
+}
 }

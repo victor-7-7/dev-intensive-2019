@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_size"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="@dimen/spacing_normal_12"
     android:background="@color/color_gray_light">
@@ -12,8 +12,7 @@
         android:layout_width="@dimen/avatar_item_size"
         android:layout_height="@dimen/avatar_item_size"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:scaleType="fitCenter"/>
+        android:layout_centerVertical="true"/>
 
     <View
         android:id="@+id/sv_indicator"
@@ -29,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_normal_16"
         android:layout_marginEnd="@dimen/spacing_normal_16"
+        android:layout_marginBottom="@dimen/spacing_small_6"
         android:layout_toStartOf="@id/tv_date_single"
         android:layout_toEndOf="@id/iv_avatar_single"
         android:fontFamily="sans-serif-medium"

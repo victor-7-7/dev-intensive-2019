@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_size"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="@dimen/spacing_normal_12"
     android:background="@color/color_gray_light">
@@ -13,8 +13,7 @@
         android:layout_height="@dimen/avatar_item_size"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/spacing_normal_16"
-        android:scaleType="fitCenter"/>
+        android:layout_marginEnd="@dimen/spacing_normal_16"/>
 
     <TextView
         android:id="@+id/tv_title_group"
@@ -23,6 +22,7 @@
         android:layout_toEndOf="@id/iv_avatar_group"
         android:layout_toStartOf="@id/tv_date_group"
         android:layout_marginEnd="@dimen/spacing_normal_16"
+        android:layout_marginBottom="@dimen/spacing_small_6"
         android:textColor="@color/color_primary"
         android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/font_normal_14"
