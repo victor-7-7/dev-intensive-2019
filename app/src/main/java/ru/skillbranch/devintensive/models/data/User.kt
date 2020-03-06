@@ -22,9 +22,10 @@ data class User (
     constructor(id:String): this(id, "John", "Doe")
 
     fun toUserItem(): UserItem {
+
         val lastActivity = when {
-            lastVisit == null -> "Еще ни разу не заходил"
             isOnline -> "online"
+            lastVisit == null -> "Еще ни разу не заходил"
             else -> "Последний раз был ${lastVisit.humanizeDiff()}"
         }
         return UserItem(

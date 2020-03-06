@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            // TODO: implement me
             val intent = Intent(this, GroupActivity::class.java)
             startActivity(intent)
         }

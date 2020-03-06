@@ -1,6 +1,6 @@
 package ru.skillbranch.devintensive.ui.adapters
 
-import android.util.Log
+import android.graphics.Color
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -64,15 +64,10 @@ class ChatAdapter(private val fromMainActivity: Boolean = true,
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ChatItemViewHolder, position: Int) {
-//        Log.d("M_ChatAdapter", "onBindViewHolder $position")
         holder.bind(items[position], listener)
     }
 
     fun updateData(data: List<ChatItem>){
-//        Log.d("M_ChatAdapter", "update data adapter - " +
-//                "new data ${data.size} hash : ${data.hashCode()} " +
-//                "old data ${items.size} hash : ${items.hashCode()}")
-
         val diffCallback = object: DiffUtil.Callback() {
             override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean
                     = items[oldPos].id == data[newPos].id
@@ -127,13 +122,11 @@ class ChatAdapter(private val fromMainActivity: Boolean = true,
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(ContextCompat.getColor(
-                                    App.applicationContext(), R.color.color_gray))
+            itemView.setBackgroundColor(Color.LTGRAY)
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(ContextCompat.getColor(
-                                    App.applicationContext(), R.color.color_gray_light))
+            itemView.setBackgroundColor(Color.WHITE)
         }
     }
 
@@ -166,13 +159,11 @@ class ChatAdapter(private val fromMainActivity: Boolean = true,
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(ContextCompat.getColor(
-                                    App.applicationContext(), R.color.color_gray))
+            itemView.setBackgroundColor(Color.LTGRAY)
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(ContextCompat.getColor(
-                                    App.applicationContext(), R.color.color_gray_light))
+            itemView.setBackgroundColor(Color.WHITE)
         }
     }
 
@@ -199,14 +190,10 @@ class ChatAdapter(private val fromMainActivity: Boolean = true,
                 text = item.messageCount.toString()
             }
             tv_title_archive.text = item.title
-            // В MainActivity автор последнего архивного сообщения всегда есть
-            // (так суммарный архивный ChatItem создается). В ArchiveActivity
-            // у архивного ChatItem в поле author будет null для chat_single
-            // и будет имя автора последнего сообщения в чате для chat_group
-            if (item.author == null) tv_message_author_archive.visibility = View.GONE
-            else tv_message_author_archive.text = item.author?.trim()
             tv_message_archive.text = item.shortDescription?.trim()
-
+            tv_message_author_archive.text = item.author?.trim()
+            tv_message_author_archive.visibility = if (item.author != null)
+                                            View.VISIBLE else View.GONE
             if (fromMainActivity) {
                 itemView.setOnTouchListener { _, ev ->
                     // Анализируем жест
@@ -226,13 +213,11 @@ class ChatAdapter(private val fromMainActivity: Boolean = true,
         }
 
         override fun onItemSelected() {
-            itemView.setBackgroundColor(ContextCompat.getColor(
-                                App.applicationContext(), R.color.color_gray))
+            itemView.setBackgroundColor(Color.LTGRAY)
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(ContextCompat.getColor(
-                                App.applicationContext(), R.color.color_gray_light))
+            itemView.setBackgroundColor(Color.WHITE)
         }
     }
 

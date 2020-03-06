@@ -12,6 +12,9 @@ class GroupViewModel : ViewModel() {
     private val selectedItems = Transformations.map(userItems) {
                                 users -> users.filter { it.isSelected } }
 
+    private fun loadUsers(): List<UserItem> = groupRepository.loadUsers()
+                                                .map{ it.toUserItem()}
+
     fun getUsersData(): LiveData<List<UserItem>> {
         val result = MediatorLiveData<List<UserItem>>()
         val filterF = {
@@ -44,9 +47,6 @@ class GroupViewModel : ViewModel() {
     fun handleSearchQuery(text: String?) {
         query.value = text
     }
-
-    private fun loadUsers(): List<UserItem> = groupRepository
-        .loadUsers().map{ it.toUserItem()}
 
     fun handleCreateGroup() {
         groupRepository.createChat(selectedItems.value!!)

@@ -22,7 +22,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.group.GroupActivity" />
-        <activity android:name=".ui.profile.ProfileActivity"/>
+        <activity android:name=".ui.profile.ProfileActivity">
+<!--            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
         <activity android:name=".ui.archive.ArchiveActivity"/>
         <activity android:name=".ui.AvatarActivity">
 <!--            <intent-filter>

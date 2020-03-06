@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.utils
 
+import android.util.Log
 import ru.skillbranch.devintensive.extensions.TimeUnits
 import ru.skillbranch.devintensive.extensions.add
 import ru.skillbranch.devintensive.models.BaseMessage
@@ -9,7 +10,7 @@ import ru.skillbranch.devintensive.models.data.User
 import java.util.*
 import kotlin.random.Random
 
-object DataGenerator {
+object DataGeneratorOrigin {
     private val maleNames = listOf(
         "Robin",
         "James",
@@ -345,11 +346,11 @@ object DataGenerator {
     val stabChats = generateStabChats(10)
 
     private fun generateUsers(count: Int): List<User> {
-        val users = mutableListOf<User>()
+        val list = mutableListOf<User>()
         for (i in 0 until count) {
             val isMale: Boolean = Random.nextBoolean()
             val (lastVisit: Date?, isOnline: Boolean) = randomDateAndOnline()
-            users.add(
+            list.add(
                 User(
                     "$i",
                     if (isMale) maleNames.random() else femaleNames.random(),
@@ -362,12 +363,11 @@ object DataGenerator {
                 )
             )
         }
-        return users
+        return list
     }
 
     private fun generateStabChats(count: Int): List<Chat> {
         val list = mutableListOf<Chat>()
-        /** Для каждого юзера сгенерим персональный сингл-чат и добавим в список */
         for (user in stabUsers) {
             val singleChat = Chat(
                 "${list.size}",
@@ -377,9 +377,9 @@ object DataGenerator {
             singleChat.messages = generateRandomMessages(singleChat, listOf(user))
             list.add(singleChat)
         }
-        /** Дополним список групповыми чатами */
         for (i in 0 until count) {
             val members = stabUsers.randomSublist(5, 2)
+            Log.e("DataGenerator", "$members")
             val groupChat = Chat(
                 "${list.size}",
                 members.map { it.firstName }.joinToString(", "),
@@ -391,7 +391,7 @@ object DataGenerator {
         return list
     }
 
-    fun generateChats(count: Int, hasGroups: Boolean = false): List<Chat> {
+    public fun generateChats(count: Int, hasGroups: Boolean = false): List<Chat> {
         val list = mutableListOf<Chat>()
         val users = generateUsers(count)
         for (user in users) {
@@ -419,7 +419,7 @@ object DataGenerator {
         return list
     }
 
-    fun generateChatsWithOffset(startId: Int, count: Int): List<Chat> {
+    public fun generateChatsWithOffset(startId: Int, count: Int): List<Chat> {
         val list = mutableListOf<Chat>()
         val users = generateUsers(count)
         for (user in users) {
@@ -434,36 +434,18 @@ object DataGenerator {
         return list
     }
 
-    /** Получаем список упорядоченных по id (но не по дате) сообщений для ЧАТА */
-    private fun generateRandomMessages(chat: Chat, users: List<User>)
-                                        : MutableList<BaseMessage> {
+    private fun generateRandomMessages(chat: Chat, users: List<User>): MutableList<BaseMessage> {
         val list = mutableListOf<BaseMessage>()
-        val rnd = (0..12).random()
+        val rnd = (0..10).random()
         for (i in 0 until rnd) {
             val user = randomUser(users)
-            // Short.MAX_VALUE=~32000, 32 тыс. минут->~533ч->~22д
-            val offset = (0..Short.MAX_VALUE).random()
-            /** Если юзер сейчас не в чате, то дата исходящего от НЕГО сообщения,
-            * не может быть позже его последнего визита в чат, а дата этого
-            * визита не может быть null */
-            val date = when {
-                user.isOnline -> Date().add(-offset, TimeUnits.SECOND)
-                // Костыль для генератора на стороне тестов (логика нарушена)
-                else -> user.lastVisit?.add(-offset, TimeUnits.MINUTE) ?: Date()
-            }
             list.add(
-                // Айди сообщений возрастают по порядку В ЧАТЕ. Если чат
-                // групповой, то разным юзерам достанутся сообщения со случайными
-                // неупорядочными айди
                 TextMessage(
                     "$i",
-                    user, // сообщение в чат написал этот юзер (параметр from)
+                    user,
                     chat,
-                    // Все сообщения пока что созданы генератором, а не юзером,
-                    // который открыл данное приложение на своем телефоне и увидел
-                    // список чатов с сообщениями. Следовательно они все входящие
                     true,
-                    date,
+                    user.lastVisit ?: Date(),
                     false,
                     randomTextPayload()
                 )
@@ -475,7 +457,7 @@ object DataGenerator {
     private fun randomTextPayload(): String {
         val lorem =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel nulla lectus. Phasellus et ullamcorper quam. Nunc sollicitudin viverra lacus. Mauris pellentesque sodales gravida. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia magna erat, in elementum leo laoreet a. Curabitur eleifend sapien ut augue dapibus, et luctus nisi aliquam. Pellentesque iaculis aliquam dolor. In accumsan ex non ante vulputate, id bibendum elit congue. Ut eget dictum nibh. Vestibulum accumsan interdum velit et volutpat. Aliquam nec consequat nibh. Vivamus et dignissim arcu, eget elementum lacus. Aliquam id metus quis velit aliquet elementum at non ligula. Vivamus non pulvinar ligula, ac dignissim leo.Donec gravida nunc quis ex cursus, sit amet fringilla arcu varius. Cras porta id nunc nec pretium. Mauris aliquet dolor non arcu rutrum, in pretium magna vestibulum. Phasellus venenatis odio sit amet dictum pellentesque. Duis sed augue vestibulum, pulvinar arcu vel, bibendum mauris. Aenean congue eleifend magna in suscipit. Donec a tellus in tellus pellentesque sollicitudin. Fusce aliquam lacus sit amet neque sollicitudin semper.Aliquam faucibus tristique tempor. Maecenas non purus a dolor sodales tempus. Praesent nec nibh in orci volutpat malesuada a sed ligula. Quisque tempus ipsum ex, eget vehicula urna tincidunt a. Maecenas maximus vel nibh id luctus. Vivamus condimentum velit vitae ante pellentesque, quis fringilla velit vestibulum. Curabitur at malesuada augue. Ut sapien enim, lobortis sed quam ut, hendrerit euismod metus. Ut vel lectus eget ante tempor blandit. In vitae nisi eu dolor consectetur elementum nec id purus.".split(
-                ". "
+                "."
             )
 
         val phrasesCount = (1..3).random()
@@ -483,15 +465,13 @@ object DataGenerator {
     }
 
     private fun randomUser(users: List<User>): User {
-        val rndInd = (users.indices).random()
+        val rndInd = (0 until users.size).random()
         return users[rndInd]
     }
 
-    /** Получаем случайный элемент из списка. Если передан аргумент true,
-     * то получаем либо null, либо случайный элемент с вероятностью 50/50 */
     private fun <T> List<T>.random(includeNull: Boolean = false): T? {
         return if (includeNull && Random.nextBoolean()) null
-        else this[(this.indices).random()]
+        else this[(0 until this.size).random()]
     }
 
     private fun <T> List<T>.randomSublist(maxCount: Int, minCount: Int = 1): List<T> {
@@ -500,27 +480,18 @@ object DataGenerator {
         return this.subList(ind, ind + rndCount)
     }
 
-    /** Получаем пару - дату последнего визита юзера в символический чат
-     * и флаг, онлайн юзер или нет (дата может быть null, если юзер онлайн) */
     private fun randomDateAndOnline(): Pair<Date?, Boolean> {
-        val isNow = Random.nextBoolean()
         val isVisited = Random.nextBoolean()
-        // Short.MAX_VALUE=~32000, 32 тыс. минут->~533ч->~22д
-        val offset = (0..Short.MAX_VALUE * 3).random()
-        val date = Date().add(-offset, TimeUnits.MINUTE)
+        val isNow = Random.nextBoolean()
         return when {
-            // Половина из списка юзеров когда-то посещала чат и сейчас не в чате
-            isVisited -> Pair(date, false)
-            // Четверть из списка юзеров сейчас в чате, из них половина в чате
-            // впервые (null), а другая половина уже бывала в чате
-            isNow -> Pair(if (Random.nextBoolean()) null else
-                Date().add(-(1..27).random(), TimeUnits.HOUR), true)
-            // Оставшаяся четверть из списка юзеров сейчас не в чате и раньше
-            // в нем не бывали. Но такие юзеры бесполезны для символического чата,
-            // поэтому их раскидаем между первыми двумя вариантами
-            else -> if (Random.nextBoolean()) Pair(date, false)
-                    else Pair(if (Random.nextBoolean()) null else
-                            Date().add(-(1..27).random(), TimeUnits.HOUR), true)
+            isVisited -> {
+                val offset = (0..Short.MAX_VALUE).random()
+                Pair(Date().add(-offset, TimeUnits.MINUTE), false)
+            }
+
+            isNow -> Pair(Date(), true)
+            else -> Pair(null, false)
         }
     }
+
 }

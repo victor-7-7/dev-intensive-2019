@@ -10,7 +10,7 @@ const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
 
-fun Date.format(pattern:String="HH:mm:ss dd.MM.yy"): String {
+fun Date.format(pattern:String="dd.MM.yy HH:mm:ss"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
     return dateFormat.format(this)
 }
@@ -27,9 +27,8 @@ fun Date.isSameDay(date: Date): Boolean {
     return day1 == day2
 }
 
-fun Date.add(value:Int, units:TimeUnits = TimeUnits.SECOND): Date {
+fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
     var time = this.time
-
     time += when(units) {
         TimeUnits.SECOND -> value * SECOND
         TimeUnits.MINUTE -> value * MINUTE
