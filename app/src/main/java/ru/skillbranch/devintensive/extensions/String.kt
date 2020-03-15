@@ -1,7 +1,5 @@
 package ru.skillbranch.devintensive.extensions
 
-import java.util.*
-
 const val MAX_CHARS = 16
 
 fun String.truncate(maxChars: Int = MAX_CHARS): String {
@@ -12,14 +10,14 @@ fun String.truncate(maxChars: Int = MAX_CHARS): String {
 }
 
 fun String.stripHtml(): String = this.removeHtmlTags()
-                                .removeHtmlSpecialChars()
-                                .removeExtraSpaces()
+    .removeHtmlSpecialChars()
+    .removeExtraSpaces()
 
 fun String.removeHtmlTags(): String =
-            this.replace(Regex("<[^<]*?>"), "")
+    this.replace(Regex("<[^<]*?>"), "")
 
 fun String.removeHtmlSpecialChars(): String =
-            this.replace(Regex("&#?\\w{2,6};"), "")
+    this.replace(Regex("&#?\\w{2,6};"), "")
 
 fun String.removeExtraSpaces(): String =
-            this.trim().replace(Regex(" {2,}"), " ")
+    this.trim().replace(Regex(" {2,}"), " ")

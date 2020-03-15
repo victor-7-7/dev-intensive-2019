@@ -1,7 +1,7 @@
 package ru.skillbranch.devintensive.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_avatar.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.ui.custom.AvatarImageViewDraft

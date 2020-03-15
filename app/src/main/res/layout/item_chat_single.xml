@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,7 +11,7 @@
         android:layout_width="@dimen/avatar_item_size"
         android:layout_height="@dimen/avatar_item_size"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 
     <View
         android:id="@+id/sv_indicator"
@@ -20,7 +19,7 @@
         android:layout_height="12dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_indicator"
-        android:layout_toStartOf="@id/tv_title_single"/>
+        android:layout_toStartOf="@id/tv_title_single" />
 
     <TextView
         android:id="@+id/tv_title_single"
@@ -62,7 +61,7 @@
         android:layout_alignParentTop="true"
         android:textSize="@dimen/font_small_10"
         android:textColor="@color/color_gray_dark"
-        tools:text="18:00"/>
+        tools:text="18:00" />
 
     <TextView
         android:id="@+id/tv_counter_single"
@@ -77,6 +76,6 @@
         android:gravity="center"
         android:paddingStart="@dimen/spacing_tiny_4"
         android:paddingEnd="@dimen/spacing_tiny_4"
-        tools:text="12"/>
+        tools:text="12" />
 
 </RelativeLayout>

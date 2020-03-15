@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             app:layout_anchor="@+id/linearLayout"
             app:layout_anchorGravity="center"
-            tools:listitem="@layout/item_user_list"/>
+            tools:listitem="@layout/item_user_list" />
 
     </LinearLayout>
 
@@ -58,6 +58,6 @@
         android:scaleY="0"
         tools:visibility="visible"
         tools:scaleX="1"
-        tools:scaleY="1"/>
+        tools:scaleY="1" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

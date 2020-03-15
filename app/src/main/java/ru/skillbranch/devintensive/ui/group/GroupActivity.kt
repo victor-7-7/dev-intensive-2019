@@ -2,11 +2,11 @@ package ru.skillbranch.devintensive.ui.group
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
 import androidx.lifecycle.Observer
@@ -38,7 +38,7 @@ class GroupActivity : AppCompatActivity() {
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
         searchView.queryHint = "Введите имя пользователя"
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.handleSearchQuery(query)
@@ -117,12 +117,16 @@ class GroupActivity : AppCompatActivity() {
             tag = user.id
             isClickable = true
             closeIconTint = ColorStateList.valueOf(Color.WHITE)
-            chipBackgroundColor = ColorStateList.valueOf(getColor(
-                                                R.color.color_primary_light))
+            chipBackgroundColor = ColorStateList.valueOf(
+                getColor(
+                    R.color.color_primary_light
+                )
+            )
             setTextColor(Color.WHITE)
         }
         chip.setOnCloseIconClickListener {
-            viewModel.handleRemoveChip(it.tag.toString()) }
+            viewModel.handleRemoveChip(it.tag.toString())
+        }
         chip_group.addView(chip)
     }
 }

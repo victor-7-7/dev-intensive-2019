@@ -45,13 +45,15 @@ class ProfileActivity : AppCompatActivity() {
     private fun initViewModel() {
         Log.d("M_ProfileActivity", "initViewModel()")
         viewModel = ViewModelProviders.of(this)
-                            .get(ProfileViewModel::class.java)
+            .get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer {
             Log.d("M_ProfileActivity", "Profile observer reacts")
-            updateUI(it) })
+            updateUI(it)
+        })
         viewModel.getTheme().observe(this, Observer {
             Log.d("M_ProfileActivity", "Theme observer reacts")
-            updateTheme(it) })
+            updateTheme(it)
+        })
     }
 
     private fun updateTheme(mode: Int) {
@@ -62,11 +64,14 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateUI(profile: Profile) {
         Log.d("M_ProfileActivity", "updateUI()")
         profile.toMap().also {
-            for ((k,v) in viewFields) v.text = it[k].toString()
+            for ((k, v) in viewFields) v.text = it[k].toString()
         }
         // Цепляем дефолтную картинку для данного профиля
-        val drawable = DefaultAvatar(this).apply { assignInitials(
-            Utils.toInitials(profile.firstName, profile.lastName) ?: "??") }
+        val drawable = DefaultAvatar(this).apply {
+            assignInitials(
+                Utils.toInitials(profile.firstName, profile.lastName) ?: "??"
+            )
+        }
         iv_avatar.setImageDrawable(drawable)
     }
 
@@ -80,10 +85,12 @@ class ProfileActivity : AppCompatActivity() {
             "about" to et_about,
             "repository" to et_repository,
             "rating" to tv_rating,
-            "respect" to tv_respect)
+            "respect" to tv_respect
+        )
 
         isEditMode = savedInstanceState?.getBoolean(
-                        IS_EDIT_MODE, false) ?: false
+            IS_EDIT_MODE, false
+        ) ?: false
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
@@ -102,7 +109,8 @@ class ProfileActivity : AppCompatActivity() {
     private fun showCurrentMode(isEdit: Boolean) {
         Log.d("M_ProfileActivity", "showCurrentMode()")
         val info = viewFields.filter {
-            setOf("firstName", "lastName", "about", "repository").contains(it.key) }
+            setOf("firstName", "lastName", "about", "repository").contains(it.key)
+        }
         for ((_, v) in info) {
             v as EditText
             v.isFocusable = isEdit
@@ -144,4 +152,4 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
- }
+}

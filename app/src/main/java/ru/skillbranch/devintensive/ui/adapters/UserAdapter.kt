@@ -11,15 +11,17 @@ import kotlinx.android.synthetic.main.item_user_list.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.UserItem
 
-class UserAdapter(private val listener: (UserItem) -> Unit)
-                : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(private val listener: (UserItem) -> Unit) :
+    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     var items: List<UserItem> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val convertView = inflater.inflate(R.layout.item_user_list,
-                                    parent, false)
+        val convertView = inflater.inflate(
+            R.layout.item_user_list,
+            parent, false
+        )
         return UserViewHolder(convertView)
     }
 
@@ -29,13 +31,13 @@ class UserAdapter(private val listener: (UserItem) -> Unit)
         holder.bind(items[position], listener)
     }
 
-    fun updateData(data: List<UserItem>){
-        val diffCallback = object: DiffUtil.Callback() {
-            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean
-                    = items[oldPos].id == data[newPos].id
+    fun updateData(data: List<UserItem>) {
+        val diffCallback = object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean =
+                items[oldPos].id == data[newPos].id
 
-            override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean
-                    = items[oldPos].hashCode() == data[newPos].hashCode()
+            override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean =
+                items[oldPos].hashCode() == data[newPos].hashCode()
 
             override fun getOldListSize(): Int = items.size
 
@@ -46,8 +48,8 @@ class UserAdapter(private val listener: (UserItem) -> Unit)
         diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class UserViewHolder(convertView: View)
-                    : RecyclerView.ViewHolder(convertView), LayoutContainer {
+    inner class UserViewHolder(convertView: View) : RecyclerView.ViewHolder(convertView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
 
@@ -60,10 +62,10 @@ class UserAdapter(private val listener: (UserItem) -> Unit)
             } else {
                 Glide.with(itemView).clear(iv_avatar_user)
             }
-            sv_indicator.visibility = if(user.isOnline) View.VISIBLE else View.GONE
+            sv_indicator.visibility = if (user.isOnline) View.VISIBLE else View.GONE
             tv_user_name.text = user.fullName
             tv_last_activity.text = user.lastActivity
-            iv_selected.visibility = if(user.isSelected) View.VISIBLE else View.GONE
+            iv_selected.visibility = if (user.isSelected) View.VISIBLE else View.GONE
             itemView.setOnClickListener {
                 listener.invoke(user)
             }

@@ -6,6 +6,7 @@ import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.models.TextMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
+
 data class Chat(
     val id: String,
     val title: String,
@@ -17,7 +18,7 @@ data class Chat(
 
     companion object {
         /** Метод вызывается в MainViewModel только когда в списке chats
-        * есть хотя бы один архивный чат */
+         * есть хотя бы один архивный чат */
         // Аннотация позволит вызвать метод в Java коде как статич. метод класса
         @JvmStatic
         fun archivedToChatItem(archivedChats: List<Chat>): ChatItem {
@@ -40,13 +41,13 @@ data class Chat(
                 ChatType.ARCHIVE,
                 lastMess?.from?.firstName,
                 lastMess?.date
-                )
+            )
         }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun unreadableMessageCount(): Int = if (messages.isEmpty()) 0
-                            else messages.map { !it.isReaded }.size
+    else messages.map { !it.isReaded }.size
 
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -54,7 +55,7 @@ data class Chat(
         // Если групповой чат только что создан кнопкой fab,
         // то в нем нет сообщений
         return if (messages.isEmpty()) null
-                else messages.maxBy { it.date }!!.date
+        else messages.maxBy { it.date }!!.date
     }
 
     /** Получаем текст последнего по дате сообщения (1) в чате
@@ -63,7 +64,7 @@ data class Chat(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun lastMessageShort(): Pair<String, String?> =
         if (messages.isEmpty()) Pair("Сообщений еще нет", null)
-        else when(val msg = messages.maxBy { it.date }) {
+        else when (val msg = messages.maxBy { it.date }) {
             is TextMessage -> msg.text!! to msg.from.firstName
             else -> "${msg!!.from.firstName} - отправил фото" to
                     msg.from.firstName

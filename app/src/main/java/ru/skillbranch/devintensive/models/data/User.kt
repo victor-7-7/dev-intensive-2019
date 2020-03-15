@@ -4,8 +4,8 @@ import ru.skillbranch.devintensive.extensions.humanizeDiff
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
-data class User (
-    val id:String,
+data class User(
+    val id: String,
     var firstName: String?,
     var lastName: String?,
     var avatar: String?,
@@ -13,13 +13,15 @@ data class User (
     var respect: Int = 0,
     val lastVisit: Date? = Date(),
     val isOnline: Boolean = false
-    ) {
+) {
 
-    constructor(id:String, firstName:String?, lastName:String?)
-            : this(id = id, firstName = firstName,
-                    lastName = lastName, avatar = null)
+    constructor(id: String, firstName: String?, lastName: String?)
+            : this(
+        id = id, firstName = firstName,
+        lastName = lastName, avatar = null
+    )
 
-    constructor(id:String): this(id, "John", "Doe")
+    constructor(id: String) : this(id, "John", "Doe")
 
     fun toUserItem(): UserItem {
 

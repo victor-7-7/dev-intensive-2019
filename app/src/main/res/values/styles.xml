@@ -7,8 +7,7 @@
         <item name="android:activityCloseExitAnimation">@anim/bottom_down</item>
     </style>
 
-    <style name="Profile">
-    </style>
+    <style name="Profile"></style>
 
     <style name="Profile.EditText" parent="Profile">
         <item name="android:textColor">?attr/colorPrimary</item>

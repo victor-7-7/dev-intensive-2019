@@ -18,7 +18,7 @@ class AvatarImageViewShader @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): ImageView(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
@@ -27,8 +27,10 @@ class AvatarImageViewShader @JvmOverloads constructor(
         private const val DEF_SIZE_H_DP = 60F
     }
 
-    @Px private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
-    @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
+    @Px
+    private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
+    @ColorInt
+    private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
     private lateinit var srcBm: Bitmap
 
@@ -39,13 +41,17 @@ class AvatarImageViewShader @JvmOverloads constructor(
     init {
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageViewShader)
-            borderColor = a.getColor(R.styleable.AvatarImageViewShader_aivs_borderColor,
-                                            DEFAULT_BORDER_COLOR)
+            borderColor = a.getColor(
+                R.styleable.AvatarImageViewShader_aivs_borderColor,
+                DEFAULT_BORDER_COLOR
+            )
             // Получаем значение в пикселях
-            borderWidth = a.getDimension(R.styleable.AvatarImageViewShader_aivs_borderWidth,
-                                            borderWidth)
+            borderWidth = a.getDimension(
+                R.styleable.AvatarImageViewShader_aivs_borderWidth,
+                borderWidth
+            )
             initials = a.getString(R.styleable.AvatarImageViewShader_aivs_initials)
-                                            ?: initials
+                ?: initials
             a.recycle()
         }
         scaleType = ScaleType.CENTER_CROP
@@ -62,8 +68,10 @@ class AvatarImageViewShader @JvmOverloads constructor(
 
     private fun prepareShader(w: Int, h: Int) {
         srcBm = drawable.toBitmap(w, h, Bitmap.Config.ARGB_8888)
-        avatarPaint.shader = BitmapShader(srcBm, Shader.TileMode.CLAMP,
-                                                Shader.TileMode.CLAMP)
+        avatarPaint.shader = BitmapShader(
+            srcBm, Shader.TileMode.CLAMP,
+            Shader.TileMode.CLAMP
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -76,31 +84,35 @@ class AvatarImageViewShader @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
-        Log.d("M_AvatarImageViewShader", """
+        Log.d(
+            "M_AvatarImageViewShader", """
             onMeasure 
             W- ${MeasureSpec.toString(widthSpec)} 
-            H- ${MeasureSpec.toString(heightSpec)}""".trimIndent())
+            H- ${MeasureSpec.toString(heightSpec)}""".trimIndent()
+        )
         val initSize = resolveDefaultSize(widthSpec to heightSpec)
         // Вьюха должна быть равносторонней
         val size = min(initSize.first, initSize.second)
         setMeasuredDimension(size, size)
-        Log.d("M_AvatarImageViewShader", "onMeasure after: " +
-                "$measuredWidth x $measuredHeight")
+        Log.d(
+            "M_AvatarImageViewShader", "onMeasure after: " +
+                    "$measuredWidth x $measuredHeight"
+        )
     }
 
     private fun resolveDefaultSize(spec: Pair<Int, Int>): Pair<Int, Int> {
-        return when(MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
+        return when (MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
             MeasureSpec.UNSPECIFIED to MeasureSpec.UNSPECIFIED ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+                        context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY,
             MeasureSpec.UNSPECIFIED to MeasureSpec.AT_MOST ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                MeasureSpec.getSize(spec.second)
+                        MeasureSpec.getSize(spec.second)
             MeasureSpec.EXACTLY to MeasureSpec.UNSPECIFIED,
             MeasureSpec.AT_MOST to MeasureSpec.UNSPECIFIED ->
                 MeasureSpec.getSize(spec.first) to
-                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+                        context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             else -> MeasureSpec.getSize(spec.first) to MeasureSpec.getSize(spec.second)
         }
     }

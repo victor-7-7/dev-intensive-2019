@@ -29,7 +29,7 @@ class AvatarImageViewTest @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): ImageView(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
@@ -56,12 +56,15 @@ class AvatarImageViewTest @JvmOverloads constructor(
             "#ECECEC"
         )
     }
+
     private var indxW = -1
     private var indxC = -1
 
     private var borderWidthDp = DEFAULT_BORDER_WIDTH_DP.toInt()
-    @Px private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
-    @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
+    @Px
+    private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
+    @ColorInt
+    private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
     private var initialMode = true
     private var animSize = 0
@@ -75,13 +78,17 @@ class AvatarImageViewTest @JvmOverloads constructor(
     init {
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageView)
-            borderColor = a.getColor(R.styleable.AvatarImageView_aiv_borderColor,
-                                            DEFAULT_BORDER_COLOR)
+            borderColor = a.getColor(
+                R.styleable.AvatarImageView_aiv_borderColor,
+                DEFAULT_BORDER_COLOR
+            )
             // Получаем значение в пикселях
-            borderWidth = a.getDimension(R.styleable.AvatarImageView_aiv_borderWidth,
-                                            borderWidth)
+            borderWidth = a.getDimension(
+                R.styleable.AvatarImageView_aiv_borderWidth,
+                borderWidth
+            )
             initials = a.getString(R.styleable.AvatarImageView_aiv_initials)
-                                            ?: initials
+                ?: initials
             if (drawable != null) initialMode = false
             a.recycle()
         }
@@ -91,7 +98,8 @@ class AvatarImageViewTest @JvmOverloads constructor(
         setOnClickListener {
             indxW++
             if (indxW > testArrWidth.size - 1) indxW = 0
-            setBorderWidth(testArrWidth[indxW]) }
+            setBorderWidth(testArrWidth[indxW])
+        }
     }
 
     private fun setup() {
@@ -106,8 +114,10 @@ class AvatarImageViewTest @JvmOverloads constructor(
     private fun prepareShader(w: Int, h: Int) {
         if (w == 0 || drawable == null) return
         val bm = drawable.toBitmap(w, h, Bitmap.Config.ARGB_8888)
-        avatarPaint.shader = BitmapShader(bm, Shader.TileMode.CLAMP,
-                                                Shader.TileMode.CLAMP)
+        avatarPaint.shader = BitmapShader(
+            bm, Shader.TileMode.CLAMP,
+            Shader.TileMode.CLAMP
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -115,7 +125,7 @@ class AvatarImageViewTest @JvmOverloads constructor(
         if (drawable == null || initialMode) drawInitials(canvas)
         else drawAvatar(canvas)
         if (borderWidth > 0)
-            // Рисуем кольцо по границе вюхи (вьюха у нас круглая)
+        // Рисуем кольцо по границе вюхи (вьюха у нас круглая)
             canvas.drawOval(borderRect.toRectF(), borderPaint)
     }
 
@@ -132,8 +142,10 @@ class AvatarImageViewTest @JvmOverloads constructor(
             textSize = height * FONT_ASPECT_RATIO
         }
         val shiftY = (textPaint.descent() + textPaint.ascent()) * .5F
-        c.drawText(initials, viewRect.exactCenterX(),
-                    viewRect.exactCenterY() - shiftY, textPaint)
+        c.drawText(
+            initials, viewRect.exactCenterX(),
+            viewRect.exactCenterY() - shiftY, textPaint
+        )
     }
 
     private fun initialsToColor(): Int {
@@ -173,8 +185,7 @@ class AvatarImageViewTest @JvmOverloads constructor(
             val colorId = colorArr.peekValue(indxC).resourceId
             setBorderColor(colorId)
             colorArr.recycle()
-        }
-        else invalidate()
+        } else invalidate()
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
@@ -187,18 +198,18 @@ class AvatarImageViewTest @JvmOverloads constructor(
     }
 
     private fun resolveDefaultSize(spec: Pair<Int, Int>): Pair<Int, Int> {
-        return when(MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
+        return when (MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
             MeasureSpec.UNSPECIFIED to MeasureSpec.UNSPECIFIED ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+                        context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY,
             MeasureSpec.UNSPECIFIED to MeasureSpec.AT_MOST ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                MeasureSpec.getSize(spec.second)
+                        MeasureSpec.getSize(spec.second)
             MeasureSpec.EXACTLY to MeasureSpec.UNSPECIFIED,
             MeasureSpec.AT_MOST to MeasureSpec.UNSPECIFIED ->
                 MeasureSpec.getSize(spec.first) to
-                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+                        context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             else -> MeasureSpec.getSize(spec.first) to MeasureSpec.getSize(spec.second)
         }
     }
@@ -243,9 +254,9 @@ class AvatarImageViewTest @JvmOverloads constructor(
     override fun onSaveInstanceState(): Parcelable? {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.borderWidthDp = borderWidthDp
-        savedState.borderWidth  = borderWidth
+        savedState.borderWidth = borderWidth
         savedState.borderColor = borderColor
-        savedState.initialMode  = initialMode
+        savedState.initialMode = initialMode
         return savedState
     }
 
@@ -283,7 +294,7 @@ class AvatarImageViewTest @JvmOverloads constructor(
         invalidate()
     }
 
-    fun getBorderColor():Int = borderColor
+    fun getBorderColor(): Int = borderColor
 
     fun setBorderColor(hex: String) {
         borderColor = Color.parseColor(hex)
@@ -299,13 +310,13 @@ class AvatarImageViewTest @JvmOverloads constructor(
         invalidate()
     }
 
-    private class SavedState: BaseSavedState, Parcelable {
+    private class SavedState : BaseSavedState, Parcelable {
         var borderWidthDp: Int = 0
         var borderWidth = 0F
         var borderColor: Int = 0
         var initialMode = true
 
-        constructor(superState: Parcelable?): super(superState)
+        constructor(superState: Parcelable?) : super(superState)
 
         constructor(src: Parcel) : super(src) {
             // Restore state from parcel

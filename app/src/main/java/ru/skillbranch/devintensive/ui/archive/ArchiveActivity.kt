@@ -35,7 +35,7 @@ class ArchiveActivity : AppCompatActivity() {
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
         searchView.queryHint = "Введите имя пользователя"
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.handleSearchQuery(query)
@@ -56,16 +56,21 @@ class ArchiveActivity : AppCompatActivity() {
 
     private fun initViews() {
         chatAdapter = ChatAdapter(false) {
-            Snackbar.make(rv_chat_list, "Click on ${it.title}",
-                Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                rv_chat_list, "Click on ${it.title}",
+                Snackbar.LENGTH_LONG
+            ).show()
         }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         // Если аргумент-лямбда последний, то его можно вынести за скобки
         val touchCallback = ChatItemTouchHelperCallback(
-                            chatAdapter, false) {
+            chatAdapter, false
+        ) {
             viewModel.restoreFromArchive(it.id)
-            Snackbar.make(rv_chat_list, "Вы точно хотите извлечь ${it.title} из архива?",
-                Snackbar.LENGTH_LONG)
+            Snackbar.make(
+                    rv_chat_list, "Вы точно хотите извлечь ${it.title} из архива?",
+                    Snackbar.LENGTH_LONG
+                )
                 .setAction("Undo", Listener(it.id, viewModel)).show()
         }
         val touchHelper = ItemTouchHelper(touchCallback)
@@ -85,8 +90,7 @@ class ArchiveActivity : AppCompatActivity() {
         })
     }
 
-    class Listener(val id: String, private val vm: ArchiveViewModel)
-        : View.OnClickListener {
+    class Listener(val id: String, private val vm: ArchiveViewModel) : View.OnClickListener {
         override fun onClick(v: View?) {
             vm.addToArchive(id)
         }

@@ -32,7 +32,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         }
     }
 
-    enum class Status(val color: Triple<Int, Int, Int>){
+    enum class Status(val color: Triple<Int, Int, Int>) {
         NORMAL(Triple(255, 255, 255)),
         WARNING(Triple(255, 120, 0)),
         DANGER(Triple(255, 60, 60)),
@@ -41,13 +41,13 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         fun nextStatus(): Status {
             return if (this.ordinal < values().lastIndex) {
                 values()[this.ordinal + 1]
-            }else{
+            } else {
                 values()[0]
             }
         }
     }
 
-    enum class Question(val question: String, val answers: List<String>){
+    enum class Question(val question: String, val answers: List<String>) {
         NAME("Как меня зовут?", listOf("Бендер", "Bender")) {
             override fun nextQuestion(): Question = PROFESSION
             override fun checkConditions(answer: String) =
@@ -76,13 +76,15 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             override fun nextQuestion(): Question = IDLE
             override fun checkConditions(answer: String) =
                 if (answer.length != 7 ||
-                    answer.contains(Regex("\\D")))
+                    answer.contains(Regex("\\D"))
+                )
                     "Серийный номер содержит только цифры, и их 7" else ""
         },
         IDLE("На этом все, вопросов больше нет", listOf()) {
             override fun nextQuestion(): Question = IDLE
             override fun checkConditions(answer: String) = ""
         };
+
         abstract fun nextQuestion(): Question
         abstract fun checkConditions(answer: String): String
     }

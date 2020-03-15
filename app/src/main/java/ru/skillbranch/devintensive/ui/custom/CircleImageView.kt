@@ -11,14 +11,15 @@ import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.*
+import ru.skillbranch.devintensive.extensions.convertDpToPx
+import ru.skillbranch.devintensive.extensions.convertPxToDp
 import kotlin.math.min
 
 open class CircleImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): ImageView(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
@@ -26,6 +27,7 @@ open class CircleImageView @JvmOverloads constructor(
     }
 
     private var borderColor = DEFAULT_BORDER_COLOR
+
     // Ширина границы в пикселах
     private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
     private var borderWidthDp = DEFAULT_BORDER_WIDTH_DP.toInt()
@@ -35,11 +37,15 @@ open class CircleImageView @JvmOverloads constructor(
     init {
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
-            borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor,
-                                            DEFAULT_BORDER_COLOR)
+            borderColor = a.getColor(
+                R.styleable.CircleImageView_cv_borderColor,
+                DEFAULT_BORDER_COLOR
+            )
             // Получаем значение в пикселях
-            borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth,
-                                                            borderWidth)
+            borderWidth = a.getDimension(
+                R.styleable.CircleImageView_cv_borderWidth,
+                borderWidth
+            )
             // Преобразуем пиксели в dp
             borderWidthDp = context.convertPxToDp(borderWidth).toInt()
             a.recycle()
@@ -66,7 +72,7 @@ open class CircleImageView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun getBorderColor():Int = borderColor
+    fun getBorderColor(): Int = borderColor
 
     fun setBorderColor(hex: String) {
         borderColor = Color.parseColor(hex)
@@ -87,8 +93,10 @@ open class CircleImageView @JvmOverloads constructor(
         // толщины, чтобы вписать его в круг
         val delta = borderWidth * .5F
         // Рисуем кольцо
-        canvas.drawArc(delta, delta, width - delta, height - delta,
-                            0F, 360F, false, ringPaint)
+        canvas.drawArc(
+            delta, delta, width - delta, height - delta,
+            0F, 360F, false, ringPaint
+        )
     }
 
     class Outliner() : ViewOutlineProvider() {

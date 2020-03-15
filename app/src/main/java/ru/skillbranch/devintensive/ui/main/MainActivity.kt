@@ -1,13 +1,13 @@
 package ru.skillbranch.devintensive.ui.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
         searchView.queryHint = "Введите имя пользователя"
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.handleSearchQuery(query)
@@ -65,21 +65,24 @@ class MainActivity : AppCompatActivity() {
             if (it.id.toInt() == -1) {
                 startActivity(Intent(this, ArchiveActivity::class.java))
 //                Snackbar.make(rv_chat_list,"Кликнут архив", Snackbar.LENGTH_LONG).show()
-            }
-            else Snackbar.make(rv_chat_list, "Click on ${it.title}",
-                                Snackbar.LENGTH_LONG).show()
+            } else Snackbar.make(
+                rv_chat_list, "Click on ${it.title}",
+                Snackbar.LENGTH_LONG
+            ).show()
         }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         // Если аргумент-лямбда последний, то его можно вынести за скобки
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
             val hadNotArchive = chatAdapter.items[0].chatType != ChatType.ARCHIVE
             viewModel.addToArchive(it.id)
-            Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?",
-                Snackbar.LENGTH_LONG)
+            Snackbar.make(
+                    rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?",
+                    Snackbar.LENGTH_LONG
+                )
                 .setAction("Undo", Listener(it.id, viewModel)).show()
             // Если список близок к началу и архивного айтема еще в списке не было
             if (it.id.toInt() < 15 && hadNotArchive)
-                // Скроллим список вниз, чтобы показать на экране архивный айтем
+            // Скроллим список вниз, чтобы показать на экране архивный айтем
                 rv_chat_list.post { rv_chat_list.smoothScrollToPosition(0) }
         }
         val touchHelper = ItemTouchHelper(touchCallback)
@@ -98,14 +101,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getChatData().observe(this, Observer {
             chatAdapter.updateData(it)
         })
     }
 
-    class Listener(val id: String, private val vm: MainViewModel)
-                                        : View.OnClickListener {
+    class Listener(val id: String, private val vm: MainViewModel) : View.OnClickListener {
         override fun onClick(v: View?) {
             vm.restoreFromArchive(id)
         }

@@ -9,11 +9,11 @@ class GroupViewModel : ViewModel() {
     private val query = mutableLiveData("")
     private val groupRepository = GroupRepository
     private val userItems = MutableLiveData(loadUsers())
-    private val selectedItems = Transformations.map(userItems) {
-                                users -> users.filter { it.isSelected } }
+    private val selectedItems =
+        Transformations.map(userItems) { users -> users.filter { it.isSelected } }
 
     private fun loadUsers(): List<UserItem> = groupRepository.loadUsers()
-                                                .map{ it.toUserItem()}
+        .map { it.toUserItem() }
 
     fun getUsersData(): LiveData<List<UserItem>> {
         val result = MediatorLiveData<List<UserItem>>()

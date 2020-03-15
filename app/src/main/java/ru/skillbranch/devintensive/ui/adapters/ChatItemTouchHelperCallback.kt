@@ -14,8 +14,8 @@ import ru.skillbranch.devintensive.models.data.ChatType
 class ChatItemTouchHelperCallback(
     private val adapter: ChatAdapter,
     private val fromMainActivity: Boolean = true,
-    private val swipeListener: (ChatItem)->Unit)
-    : ItemTouchHelper.Callback() {
+    private val swipeListener: (ChatItem) -> Unit
+) : ItemTouchHelper.Callback() {
 
     private val bgRect = RectF()
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -28,7 +28,8 @@ class ChatItemTouchHelperCallback(
         return if (viewHolder is ItemTouchViewHolder
             // Если не пытаемся в MainActivity свайпнуть архивный айтем
             && !(fromMainActivity && viewHolder.adapterPosition == 0
-            && adapter.items[0].chatType == ChatType.ARCHIVE)) {
+                    && adapter.items[0].chatType == ChatType.ARCHIVE)
+        ) {
             makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.START)
         } else {
             makeFlag(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.START)
@@ -49,7 +50,8 @@ class ChatItemTouchHelperCallback(
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE
-            && viewHolder is ItemTouchViewHolder) {
+            && viewHolder is ItemTouchViewHolder
+        ) {
             viewHolder.onItemSelected()
         }
         super.onSelectedChanged(viewHolder, actionState)
@@ -85,15 +87,17 @@ class ChatItemTouchHelperCallback(
             bottom = itemView.bottom.toFloat()
         }
         with(bgPaint) {
-            color = itemView.resources.getColor(R.color.color_primary_dark,
-                                            itemView.context.theme)
+            color = itemView.resources.getColor(
+                R.color.color_primary_dark,
+                itemView.context.theme
+            )
         }
         c.drawRect(bgRect, bgPaint)
     }
 
     private fun drawIcon(c: Canvas, itemView: View, dX: Float) {
         val resId = if (fromMainActivity) R.drawable.ic_archive_white_24dp
-                                    else R.drawable.ic_unarchive_white_24dp
+        else R.drawable.ic_unarchive_white_24dp
         val icon = itemView.resources.getDrawable(resId, itemView.context.theme)
         val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
         val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)

@@ -436,16 +436,17 @@ object DataGenerator {
 
     /** Получаем список упорядоченных по id (но не по дате) сообщений для ЧАТА */
     private fun generateRandomMessages(chat: Chat, users: List<User>)
-                                        : MutableList<BaseMessage> {
+            : MutableList<BaseMessage> {
         val list = mutableListOf<BaseMessage>()
         val rnd = (0..12).random()
         for (i in 0 until rnd) {
             val user = randomUser(users)
             // Short.MAX_VALUE=~32000, 32 тыс. минут->~533ч->~22д
             val offset = (0..Short.MAX_VALUE).random()
+
             /** Если юзер сейчас не в чате, то дата исходящего от НЕГО сообщения,
-            * не может быть позже его последнего визита в чат, а дата этого
-            * визита не может быть null */
+             * не может быть позже его последнего визита в чат, а дата этого
+             * визита не может быть null */
             val date = when {
                 user.isOnline -> Date().add(-offset, TimeUnits.SECOND)
                 // Костыль для генератора на стороне тестов (логика нарушена)
@@ -513,14 +514,18 @@ object DataGenerator {
             isVisited -> Pair(date, false)
             // Четверть из списка юзеров сейчас в чате, из них половина в чате
             // впервые (null), а другая половина уже бывала в чате
-            isNow -> Pair(if (Random.nextBoolean()) null else
-                Date().add(-(1..27).random(), TimeUnits.HOUR), true)
+            isNow -> Pair(
+                if (Random.nextBoolean()) null else
+                    Date().add(-(1..27).random(), TimeUnits.HOUR), true
+            )
             // Оставшаяся четверть из списка юзеров сейчас не в чате и раньше
             // в нем не бывали. Но такие юзеры бесполезны для символического чата,
             // поэтому их раскидаем между первыми двумя вариантами
             else -> if (Random.nextBoolean()) Pair(date, false)
-                    else Pair(if (Random.nextBoolean()) null else
-                            Date().add(-(1..27).random(), TimeUnits.HOUR), true)
+            else Pair(
+                if (Random.nextBoolean()) null else
+                    Date().add(-(1..27).random(), TimeUnits.HOUR), true
+            )
         }
     }
 }

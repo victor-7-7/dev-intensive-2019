@@ -9,13 +9,15 @@ class UserView(
     val initials: String?
 ) {
     fun printMe() {
-        println("""
+        println(
+            """
             id: $id
             fullName: $fullName
             nickName: $nickName
             avatar: $avatar
             status: $status
             initials: $initials
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 }

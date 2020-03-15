@@ -1,13 +1,16 @@
 package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Picture
+import android.graphics.Typeface
 import android.graphics.drawable.PictureDrawable
 import android.text.TextPaint
 import androidx.core.content.ContextCompat
 import ru.skillbranch.devintensive.R
 
-class DefaultAvatar @JvmOverloads constructor (
+class DefaultAvatar @JvmOverloads constructor(
     val context: Context,
     private var pic: Picture = Picture(null)
 ) : PictureDrawable(pic) {
@@ -17,6 +20,7 @@ class DefaultAvatar @JvmOverloads constructor (
         private const val H = 200
         private const val FONT_ASPECT_RATIO = .44F
     }
+
     private var textPaint: Paint
 
     init {

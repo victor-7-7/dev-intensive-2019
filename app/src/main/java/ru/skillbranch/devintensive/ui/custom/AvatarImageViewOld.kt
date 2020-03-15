@@ -14,7 +14,7 @@ class AvatarImageViewOld @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): CircleImageView(context, attrs, defStyleAttr) {
+) : CircleImageView(context, attrs, defStyleAttr) {
 
     companion object {
         private const val FONT_ASPECT_RATIO = .44F
@@ -39,8 +39,11 @@ class AvatarImageViewOld @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (drawable != null) return
-        canvas.drawColor(ContextCompat.getColor(
-                            context, R.color.color_avatar_single_bg))
+        canvas.drawColor(
+            ContextCompat.getColor(
+                context, R.color.color_avatar_single_bg
+            )
+        )
         textPaint.textSize = height * FONT_ASPECT_RATIO
         // Вычисляем позицию текста по вертикали
         val baselineY = (height - textPaint.fontMetrics.top

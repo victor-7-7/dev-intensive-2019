@@ -10,25 +10,29 @@ import kotlin.math.roundToInt
 import androidx.appcompat.app.AppCompatActivity as Activity
 
 
-
 fun Activity.hideKeyboard() {
     val imm: InputMethodManager = this.getSystemService(
-                        Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(getRootView().windowToken,
-                                InputMethodManager.HIDE_NOT_ALWAYS)
+        Context.INPUT_METHOD_SERVICE
+    ) as InputMethodManager
+    imm.hideSoftInputFromWindow(
+        getRootView().windowToken,
+        InputMethodManager.HIDE_NOT_ALWAYS
+    )
 }
 
 // Любая активити в своем корне имеет ViewGroup с id == android.R.id.content
 fun Activity.getRootView(): View = findViewById<View>(android.R.id.content)
 
 fun Context.convertDpToPx(dp: Float): Float = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+    TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics
+)
 
 fun Context.convertSpToPx(sp: Float): Float = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
+    TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics
+)
 
 fun Context.convertPxToDp(px: Float): Float = px / (resources.displayMetrics.xdpi
-                                                / DisplayMetrics.DENSITY_DEFAULT)
+        / DisplayMetrics.DENSITY_DEFAULT)
 
 fun Activity.isKeyboardOpen(): Boolean {
     val frame = Rect()

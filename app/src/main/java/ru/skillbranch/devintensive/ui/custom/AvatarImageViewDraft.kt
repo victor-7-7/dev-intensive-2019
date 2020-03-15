@@ -29,7 +29,7 @@ class AvatarImageViewDraft @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): ImageView(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.BLACK
@@ -48,9 +48,12 @@ class AvatarImageViewDraft @JvmOverloads constructor(
             "#2196F3"
         )
     }
+
     private var borderWidthDp = DEFAULT_BORDER_WIDTH_DP.toInt()
-    @Px private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
-    @ColorInt private var borderColor = DEFAULT_BORDER_COLOR
+    @Px
+    private var borderWidth = context.convertDpToPx(DEFAULT_BORDER_WIDTH_DP)
+    @ColorInt
+    private var borderColor = DEFAULT_BORDER_COLOR
     private var initials = "??"
     private var initialMode = false
     private var animSize = 0
@@ -64,13 +67,17 @@ class AvatarImageViewDraft @JvmOverloads constructor(
     init {
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageView)
-            borderColor = a.getColor(R.styleable.AvatarImageView_aiv_borderColor,
-                                            DEFAULT_BORDER_COLOR)
+            borderColor = a.getColor(
+                R.styleable.AvatarImageView_aiv_borderColor,
+                DEFAULT_BORDER_COLOR
+            )
             // Получаем значение в пикселях
-            borderWidth = a.getDimension(R.styleable.AvatarImageView_aiv_borderWidth,
-                                            borderWidth)
+            borderWidth = a.getDimension(
+                R.styleable.AvatarImageView_aiv_borderWidth,
+                borderWidth
+            )
             initials = a.getString(R.styleable.AvatarImageView_aiv_initials)
-                                            ?: initials
+                ?: initials
             a.recycle()
         }
         scaleType = ScaleType.CENTER_CROP
@@ -90,15 +97,17 @@ class AvatarImageViewDraft @JvmOverloads constructor(
     private fun prepareShader(w: Int, h: Int) {
         if (w == 0 || drawable == null) return
         val bm = drawable.toBitmap(w, h, Bitmap.Config.ARGB_8888)
-        avatarPaint.shader = BitmapShader(bm, Shader.TileMode.CLAMP,
-                                                Shader.TileMode.CLAMP)
+        avatarPaint.shader = BitmapShader(
+            bm, Shader.TileMode.CLAMP,
+            Shader.TileMode.CLAMP
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
         if (drawable == null || initialMode) drawInitials(canvas)
         else drawAvatar(canvas)
         if (borderWidth > 0)
-            // Рисуем кольцо по границе вюхи (вьюха у нас круглая)
+        // Рисуем кольцо по границе вюхи (вьюха у нас круглая)
             canvas.drawOval(borderRect.toRectF(), borderPaint)
     }
 
@@ -115,8 +124,10 @@ class AvatarImageViewDraft @JvmOverloads constructor(
             textSize = height * FONT_ASPECT_RATIO
         }
         val shiftY = (textPaint.descent() + textPaint.ascent()) * .5F
-        c.drawText(initials, viewRect.exactCenterX(),
-                    viewRect.exactCenterY() - shiftY, textPaint)
+        c.drawText(
+            initials, viewRect.exactCenterX(),
+            viewRect.exactCenterY() - shiftY, textPaint
+        )
     }
 
     private fun initialsToColor(): Int {
@@ -135,8 +146,10 @@ class AvatarImageViewDraft @JvmOverloads constructor(
             repeatCount = 1
         }
         va.addUpdateListener {
-            Log.d("M_AvatarImageView", "ValueAnimator update: " +
-                    "animSize=$animSize animatedValue=${it.animatedValue}")
+            Log.d(
+                "M_AvatarImageView", "ValueAnimator update: " +
+                        "animSize=$animSize animatedValue=${it.animatedValue}"
+            )
             animSize = it.animatedValue as Int
             requestLayout()
         }
@@ -151,37 +164,45 @@ class AvatarImageViewDraft @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
-        Log.d("M_AvatarImageView", """
+        Log.d(
+            "M_AvatarImageView", """
             onMeasure 
             W- ${MeasureSpec.toString(widthSpec)} 
-            H- ${MeasureSpec.toString(heightSpec)}""".trimIndent())
+            H- ${MeasureSpec.toString(heightSpec)}""".trimIndent()
+        )
         val initSize = resolveDefaultSize(widthSpec to heightSpec)
-        Log.d("M_AvatarImageView", "onMeasure after resolveDefaultSize: " +
-                "${initSize.first} x ${initSize.second}")
+        Log.d(
+            "M_AvatarImageView", "onMeasure after resolveDefaultSize: " +
+                    "${initSize.first} x ${initSize.second}"
+        )
         // Вьюха должна быть равносторонней
         val size = min(initSize.first, initSize.second)
         // Добавим возможность анимировать размер вьюхи по лонгклику
         val aSize = max(animSize, size)
-        Log.d("M_AvatarImageView", "onMeasure: size=$size " +
-                "animSize=$animSize aSize=$aSize")
+        Log.d(
+            "M_AvatarImageView", "onMeasure: size=$size " +
+                    "animSize=$animSize aSize=$aSize"
+        )
         setMeasuredDimension(aSize, aSize)
-        Log.d("M_AvatarImageView", "onMeasure after setMeasuredDimension: " +
-                "$measuredWidth x $measuredHeight")
+        Log.d(
+            "M_AvatarImageView", "onMeasure after setMeasuredDimension: " +
+                    "$measuredWidth x $measuredHeight"
+        )
     }
 
     private fun resolveDefaultSize(spec: Pair<Int, Int>): Pair<Int, Int> {
-        return when(MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
+        return when (MeasureSpec.getMode(spec.first) to MeasureSpec.getMode(spec.second)) {
             MeasureSpec.UNSPECIFIED to MeasureSpec.UNSPECIFIED ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+                        context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             MeasureSpec.UNSPECIFIED to MeasureSpec.EXACTLY,
             MeasureSpec.UNSPECIFIED to MeasureSpec.AT_MOST ->
                 context.convertDpToPx(DEF_SIZE_W_DP).toInt() to
-                MeasureSpec.getSize(spec.second)
+                        MeasureSpec.getSize(spec.second)
             MeasureSpec.EXACTLY to MeasureSpec.UNSPECIFIED,
             MeasureSpec.AT_MOST to MeasureSpec.UNSPECIFIED ->
                 MeasureSpec.getSize(spec.first) to
-                context.convertDpToPx(DEF_SIZE_H_DP).toInt()
+                        context.convertDpToPx(DEF_SIZE_H_DP).toInt()
             else -> MeasureSpec.getSize(spec.first) to MeasureSpec.getSize(spec.second)
         }
     }
@@ -225,9 +246,9 @@ class AvatarImageViewDraft @JvmOverloads constructor(
     override fun onSaveInstanceState(): Parcelable? {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.borderWidthDp = borderWidthDp
-        savedState.borderWidth  = borderWidth
+        savedState.borderWidth = borderWidth
         savedState.borderColor = borderColor
-        savedState.initialMode  = initialMode
+        savedState.initialMode = initialMode
         return savedState
     }
 
@@ -265,7 +286,7 @@ class AvatarImageViewDraft @JvmOverloads constructor(
         invalidate()
     }
 
-    fun getBorderColor():Int = borderColor
+    fun getBorderColor(): Int = borderColor
 
     fun setBorderColor(hex: String) {
         borderColor = Color.parseColor(hex)
@@ -281,13 +302,13 @@ class AvatarImageViewDraft @JvmOverloads constructor(
         invalidate()
     }
 
-    private class SavedState: BaseSavedState, Parcelable {
+    private class SavedState : BaseSavedState, Parcelable {
         var borderWidthDp: Int = 0
         var borderWidth = 0F
         var borderColor: Int = 0
         var initialMode = true
 
-        constructor(superState: Parcelable?): super(superState)
+        constructor(superState: Parcelable?) : super(superState)
 
         constructor(src: Parcel) : super(src) {
             // Restore state from parcel

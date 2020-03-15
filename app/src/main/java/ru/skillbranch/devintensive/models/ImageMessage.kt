@@ -7,11 +7,11 @@ import java.util.*
 /**
  * Created by Makweb on 24.06.2019.
  */
-class ImageMessage (
-    id:String,
+class ImageMessage(
+    id: String,
     from: User,
     chat: Chat,
-    isIncoming : Boolean = false,
+    isIncoming: Boolean = false,
     date: Date = Date(),
     isReaded: Boolean = false,
     var image: String
